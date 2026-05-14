@@ -259,6 +259,7 @@ footer .links a:hover { color: var(--text); }
     <div class="nav-links">
       <a href="#features">Features</a>
       <a href="#install">Install</a>
+      <a href="#troubleshooting">Troubleshooting</a>
       <a href="#download">Download</a>
       <a href="https://github.com/songhuiming/SmartEnglish" target="_blank">GitHub</a>
     </div>
@@ -383,6 +384,60 @@ footer .links a:hover { color: var(--text); }
           <h3>Start typing</h3>
           <p>Switch to SmartEnglish from the menu bar input menu (or press <code>Ctrl+Space</code>). Type and watch the suggestions appear.</p>
         </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TROUBLESHOOTING -->
+<section class="features" id="troubleshooting">
+  <div class="container">
+    <div class="section-label">Troubleshooting</div>
+    <div class="section-title">遇到问题？</div>
+    <div class="section-desc">macOS 对第三方输入法限制较多，以下是常见问题和解决方法。</div>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">&#128274;</div>
+        <h3>安装后无法打开</h3>
+        <p>macOS Gatekeeper 会阻止未经验证的应用。解决方法：<br>
+        <strong>方法一</strong>：右键点击 SmartEnglish.app → 选择「打开」<br>
+        <strong>方法二</strong>：系统设置 → 隐私与安全性 → 允许从「任何来源」下载的应用</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">&#128683;</div>
+        <h3>输入法显示为灰色</h3>
+        <p>添加输入源后如果显示灰色无法使用：<br>
+        1. 完全退出系统设置<br>
+        2. 重新打开系统设置 → 键盘 → 输入源<br>
+        3. 如果仍不行，重新登录或重启电脑</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">&#9000;</div>
+        <h3>如何切换输入法</h3>
+        <p>切换到 SmartEnglish：<br>
+        • 按 <code>Control + 空格</code> 切换输入源<br>
+        • 或按 <code>地球键</code> (Globe key) 循环切换<br>
+        • 或点击菜单栏输入法图标选择<br>
+        <em>注意：Caps Lock 在英文模式下是大写，不是切换输入法</em></p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">&#128196;</div>
+        <h3>候选词窗口不出现</h3>
+        <p>确保已切换到 SmartEnglish 输入法（菜单栏显示 SE 图标）。输入英文字母后会自动显示候选词。按 <code>1-9</code> 选择，<code>空格</code> 确认第一个，<code>回车</code> 直接上屏原始字母。</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">&#128260;</div>
+        <h3>更新或卸载</h3>
+        <p><strong>更新</strong>：下载新版，替换旧的 SmartEnglish.app，重新登录<br>
+        <strong>卸载</strong>：<br>
+        1. 系统设置 → 键盘 → 输入源 → 移除 SmartEnglish<br>
+        2. 删除 <code>~/Library/Input Methods/SmartEnglish.app</code></p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">&#128101;</div>
+        <h3>反馈与帮助</h3>
+        <p>遇到其他问题或有建议？<br>
+        请在 <a href="https://github.com/songhuiming/SmartEnglish/issues" target="_blank">GitHub Issues</a> 提交反馈，我们会尽快回复。</p>
       </div>
     </div>
   </div>

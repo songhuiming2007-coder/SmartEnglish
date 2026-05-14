@@ -1,87 +1,86 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN"
-  "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-    <key>CFBundleIdentifier</key>
-    <string>com.songhuiming.inputmethod.SmartEnglish</string>
-    <key>CFBundleName</key>
-    <string>SmartEnglish</string>
-    <key>CFBundleDisplayName</key>
-    <string>SmartEnglish</string>
-    <key>CFBundleVersion</key>
-    <string>1</string>
-    <key>CFBundleShortVersionString</key>
-    <string>0.1.0</string>
-    <key>CFBundlePackageType</key>
-    <string>APPL</string>
-    <key>CFBundleExecutable</key>
-    <string>$(EXECUTABLE_NAME)</string>
-    <key>LSMinimumSystemVersion</key>
-    <string>13.0</string>
-
-    <!-- Input Method Server 配置 -->
-    <key>InputMethodConnectionName</key>
-    <string>com.songhuiming.inputmethod.SmartEnglish_Connection</string>
-    <key>InputMethodServerControllerClass</key>
-    <string>SmartEnglishInputController</string>
-    <key>NSPrincipalClass</key>
-    <string>NSApplication</string>
-
-    <!-- 后台应用，不显示在 Dock -->
-    <key>LSUIElement</key>
-    <true/>
-    <key>NSSupportsSuddenTermination</key>
-    <false/>
-
-    <!-- 字符集：拉丁字母 -->
-    <key>TISIntendedLanguage</key>
-    <string>en</string>
-    <key>tsInputMethodCharacterRepertoireKey</key>
-    <array>
-        <string>Latn</string>
-    </array>
-
-    <!-- 菜单栏图标 -->
-    <key>tsInputMethodIconFileKey</key>
-    <string>main.tiff</string>
-    <key>TISIconIsTemplate</key>
-    <true/>
-
-    <!-- 输入源注册信息 -->
-    <key>TISInputSourceID</key>
-    <string>com.songhuiming.inputmethod.SmartEnglish</string>
-
-    <key>ComponentInputModeDict</key>
-    <dict>
-        <key>tsInputModeListKey</key>
-        <dict>
-            <key>com.songhuiming.inputmethod.SmartEnglish</key>
-            <dict>
-                <key>TISInputSourceID</key>
-                <string>com.songhuiming.inputmethod.SmartEnglish</string>
-                <key>TISIntendedLanguage</key>
-                <string>en</string>
-                <key>tsInputModeDefaultStateKey</key>
-                <true/>
-                <key>tsInputModeScriptKey</key>
-                <string>smRoman</string>
-                <key>tsInputModePrimaryInScriptKey</key>
-                <true/>
-                <key>tsInputModeIsVisibleKey</key>
-                <true/>
-                <key>tsInputModeKeyEquivalentModifiersKey</key>
-                <integer>0</integer>
-                <key>tsInputModeKeyEquivalentKey</key>
-                <string></string>
-                <key>tsInputModeMenuIconFileKey</key>
-                <string>main.tiff</string>
-            </dict>
-        </dict>
-        <key>tsVisibleInputModeOrderedArrayKey</key>
-        <array>
-            <string>com.songhuiming.inputmethod.SmartEnglish</string>
-        </array>
-    </dict>
+	<key>CFBundleDisplayName</key>
+	<string>SmartEnglish</string>
+	<key>CFBundleExecutable</key>
+	<string>$(EXECUTABLE_NAME)</string>
+	<key>CFBundleIconFile</key>
+	<string>AppIcon</string>
+	<key>CFBundleIconName</key>
+	<string>AppIcon</string>
+	<key>CFBundleIdentifier</key>
+	<string>com.songhuiming.inputmethod.SmartEnglish</string>
+	<key>CFBundleName</key>
+	<string>SmartEnglish</string>
+	<key>CFBundlePackageType</key>
+	<string>APPL</string>
+	<key>CFBundleShortVersionString</key>
+	<string>0.1.0</string>
+	<key>CFBundleVersion</key>
+	<string>1</string>
+	<key>ComponentInputModeDict</key>
+	<dict>
+		<key>tsInputModeListKey</key>
+		<dict>
+			<key>com.songhuiming.inputmethod.SmartEnglish</key>
+			<dict>
+				<key>TISIconLabels</key>
+				<dict>
+					<key>Primary</key>
+					<string>SE</string>
+				</dict>
+				<key>TISInputSourceID</key>
+				<string>com.songhuiming.inputmethod.SmartEnglish</string>
+				<key>TISIntendedLanguage</key>
+				<string>en</string>
+				<key>tsInputModeDefaultStateKey</key>
+				<true/>
+				<key>tsInputModeIsVisibleKey</key>
+				<true/>
+				<key>tsInputModeKeyEquivalentKey</key>
+				<string></string>
+				<key>tsInputModeKeyEquivalentModifiersKey</key>
+				<integer>0</integer>
+				<key>tsInputModeMenuIconFileKey</key>
+				<string>menu_icon.tiff</string>
+				<key>tsInputModePaletteIconFileKey</key>
+				<string>main.tiff</string>
+				<key>tsInputModePrimaryInScriptKey</key>
+				<true/>
+				<key>tsInputModeScriptKey</key>
+				<string>smRoman</string>
+			</dict>
+		</dict>
+		<key>tsVisibleInputModeOrderedArrayKey</key>
+		<array>
+			<string>com.songhuiming.inputmethod.SmartEnglish</string>
+		</array>
+	</dict>
+	<key>InputMethodConnectionName</key>
+	<string>com.songhuiming.inputmethod.SmartEnglish_Connection</string>
+	<key>InputMethodServerControllerClass</key>
+	<string>SmartEnglishInputController</string>
+	<key>LSMinimumSystemVersion</key>
+	<string>13.0</string>
+	<key>LSUIElement</key>
+	<true/>
+	<key>NSPrincipalClass</key>
+	<string>NSApplication</string>
+	<key>NSSupportsSuddenTermination</key>
+	<false/>
+	<key>TISIconIsTemplate</key>
+	<false/>
+	<key>TISInputSourceID</key>
+	<string>com.songhuiming.inputmethod.SmartEnglish</string>
+	<key>TISIntendedLanguage</key>
+	<string>en</string>
+	<key>tsInputMethodCharacterRepertoireKey</key>
+	<array>
+		<string>Latn</string>
+	</array>
+	<key>tsInputMethodIconFileKey</key>
+	<string>main.tiff</string>
 </dict>
 </plist>

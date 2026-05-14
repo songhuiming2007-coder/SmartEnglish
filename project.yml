@@ -22,6 +22,8 @@ targets:
     resources:
       - path: SmartEnglish/Resources/words.txt
       - path: SmartEnglish/Resources/main.tiff
+      - path: SmartEnglish/Resources/menu_icon.tiff
+      - path: SmartEnglish/Resources/AppIcon.icns
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.songhuiming.inputmethod.SmartEnglish
