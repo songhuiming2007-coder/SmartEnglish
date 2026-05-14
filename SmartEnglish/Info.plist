@@ -17,9 +17,9 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>0.1.0</string>
+	<string>0.2.0</string>
 	<key>CFBundleVersion</key>
-	<string>1</string>
+	<string>2</string>
 	<key>ComponentInputModeDict</key>
 	<dict>
 		<key>tsInputModeListKey</key>
@@ -35,6 +35,8 @@
 				<string>com.songhuiming.inputmethod.SmartEnglish</string>
 				<key>TISIntendedLanguage</key>
 				<string>en</string>
+				<key>tsInputModeAlternateMenuIconFileKey</key>
+				<string>main.tiff</string>
 				<key>tsInputModeDefaultStateKey</key>
 				<true/>
 				<key>tsInputModeIsVisibleKey</key>
@@ -44,7 +46,7 @@
 				<key>tsInputModeKeyEquivalentModifiersKey</key>
 				<integer>0</integer>
 				<key>tsInputModeMenuIconFileKey</key>
-				<string>menu_icon.tiff</string>
+				<string>main.tiff</string>
 				<key>tsInputModePaletteIconFileKey</key>
 				<string>main.tiff</string>
 				<key>tsInputModePrimaryInScriptKey</key>
@@ -71,7 +73,7 @@
 	<key>NSSupportsSuddenTermination</key>
 	<false/>
 	<key>TISIconIsTemplate</key>
-	<false/>
+	<true/>
 	<key>TISInputSourceID</key>
 	<string>com.songhuiming.inputmethod.SmartEnglish</string>
 	<key>TISIntendedLanguage</key>

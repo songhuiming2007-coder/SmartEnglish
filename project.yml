@@ -21,6 +21,7 @@ targets:
         type: group
     resources:
       - path: SmartEnglish/Resources/words.txt
+      - path: SmartEnglish/Resources/proper_nouns.txt
       - path: SmartEnglish/Resources/main.tiff
       - path: SmartEnglish/Resources/menu_icon.tiff
       - path: SmartEnglish/Resources/AppIcon.icns

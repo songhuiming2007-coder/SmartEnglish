@@ -5,11 +5,13 @@ class WordDictionary {
 
     private var entries: [(word: String, freq: Int)] = []
     private var userFreq: [String: Int] = [:]
+    private var properNouns: [String: String] = [:]  // lowercase -> standard form
     private let userDefaultsKey = "SmartEnglish_UserFreq"
 
     private init() {
         loadBuiltIn()
         loadUserFreq()
+        loadProperNouns()
     }
 
     // MARK: - 加载词库
@@ -84,5 +86,33 @@ class WordDictionary {
 
     private func saveUserFreq() {
         UserDefaults.standard.set(userFreq, forKey: userDefaultsKey)
+    }
+
+    // MARK: - 专有名词
+
+    private func loadProperNouns() {
+        guard let url = Bundle.main.url(forResource: "proper_nouns", withExtension: "txt") else {
+            NSLog("SmartEnglish: proper_nouns.txt not found in bundle (optional)")
+            return
+        }
+        guard let content = try? String(contentsOf: url, encoding: .utf8) else {
+            NSLog("SmartEnglish ERROR: Failed to read proper_nouns.txt")
+            return
+        }
+        var count = 0
+        for line in content.components(separatedBy: .newlines) {
+            let word = line.trimmingCharacters(in: .whitespaces)
+            guard !word.isEmpty else { continue }
+            let key = word.lowercased()
+            if key != word {
+                properNouns[key] = word
+                count += 1
+            }
+        }
+        NSLog("SmartEnglish: Loaded \(count) proper nouns")
+    }
+
+    func properNounForm(for word: String) -> String? {
+        return properNouns[word.lowercased()]
     }
 }

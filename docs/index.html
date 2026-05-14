@@ -271,7 +271,7 @@ footer .links a:hover { color: var(--text); }
   <div class="container">
     <div class="hero-badge">
       <span class="dot"></span>
-      Free & open source for macOS
+      v0.2.0 — Smart casing & proper nouns
     </div>
     <h1>
       <span class="dim">iPhone-style</span><br>
@@ -314,7 +314,7 @@ footer .links a:hover { color: var(--text); }
   <div class="container">
     <div class="section-label">Features</div>
     <div class="section-title">Everything you need,<br>nothing you don't.</div>
-    <div class="section-desc">A minimal, fast, privacy-first predictive text engine for macOS.</div>
+    <div class="section-desc">A minimal, fast, privacy-first predictive text engine for macOS &mdash; now with smart casing and proper noun support.</div>
     <div class="features-grid">
       <div class="feature-card">
         <div class="feature-icon">&#9889;</div>
@@ -345,6 +345,16 @@ footer .links a:hover { color: var(--text); }
         <div class="feature-icon">&#128274;</div>
         <h3>Open source</h3>
         <p>MIT licensed. Read every line, fork it, improve it. Your input method should have nothing to hide.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">&#9997;&#65039;</div>
+        <h3>Smart casing</h3>
+        <p>Input case is preserved in output. Type <code style="font-family:var(--mono);font-size:13px;background:var(--bg);padding:1px 6px;border-radius:4px;">ENG</code> and get <strong>ENGLAND</strong>, type <code style="font-family:var(--mono);font-size:13px;background:var(--bg);padding:1px 6px;border-radius:4px;">Eng</code> and get <strong>England</strong>. No manual shifting needed.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">&#127758;</div>
+        <h3>Proper nouns</h3>
+        <p>448 built-in proper nouns &mdash; countries, languages, and more. Type <code style="font-family:var(--mono);font-size:13px;background:var(--bg);padding:1px 6px;border-radius:4px;">chin</code> and SmartEnglish outputs <strong>China</strong> automatically.</p>
       </div>
     </div>
   </div>
@@ -454,7 +464,7 @@ footer .links a:hover { color: var(--text); }
         <span>&bull;</span>
         <span>~400 KB</span>
         <span>&bull;</span>
-        <span>v0.1.0</span>
+        <span>v0.2.0</span>
       </div>
       <div class="download-buttons">
         <a href="https://github.com/songhuiming2007-coder/SmartEnglish/releases/latest/download/SmartEnglish.zip" class="btn btn-primary">
@@ -492,6 +502,8 @@ const demos = [
   { typed: 'bea', candidates: ['beautiful', 'because', 'beach', 'beating', 'bear'], pick: 0 },
   { typed: 'thi', candidates: ['think', 'this', 'thing', 'third', 'thick'], pick: 0 },
   { typed: 'pro', candidates: ['problem', 'probably', 'program', 'project', 'process'], pick: 3 },
+  { typed: 'ENG', candidates: ['ENGLAND', 'ENGINEER', 'ENGAGE', 'ENGLISH', 'ENGINE'], pick: 0 },
+  { typed: 'chin', candidates: ['China', 'chinese', 'chip', 'child', 'choice'], pick: 0 },
   { typed: 'hel', candidates: ['hello', 'help', 'held', 'hell', 'helmet'], pick: 0 },
   { typed: 'dev', candidates: ['development', 'developer', 'device', 'develop', 'devil'], pick: 1 },
 ];
