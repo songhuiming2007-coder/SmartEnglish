@@ -1,0 +1,325 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		26DAD59FB4AEE0E0C88DB735 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4750285F80D939F387D03897 /* main.swift */; };
+		30A08585FF5A8E34450C5A99 /* WordDictionary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3492535FE4115AB588F8E4CA /* WordDictionary.swift */; };
+		7C0D69D6DE3E79EDBCD9C47E /* CandidateWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2A3A1895A7FC7FA7208F1A4 /* CandidateWindow.swift */; };
+		7DA6E5B2608A3C8102509C39 /* SmartEnglishInputController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7507E18FA3D840BC3EE1315F /* SmartEnglishInputController.swift */; };
+		C161D5BC961CAA7706BC7177 /* CandidateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7C89FD98AE741462472A4AF /* CandidateView.swift */; };
+		E2E555D6DEAEF7534765D2D6 /* main.tiff in Resources */ = {isa = PBXBuildFile; fileRef = B87CA0E173DBD02BEE441D01 /* main.tiff */; };
+		E61F62D8F41703D5A2171E89 /* words.txt in Resources */ = {isa = PBXBuildFile; fileRef = D11CE3AB4847B02A8D582272 /* words.txt */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		3492535FE4115AB588F8E4CA /* WordDictionary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WordDictionary.swift; sourceTree = "<group>"; };
+		4750285F80D939F387D03897 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
+		7507E18FA3D840BC3EE1315F /* SmartEnglishInputController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SmartEnglishInputController.swift; sourceTree = "<group>"; };
+		A2A3A1895A7FC7FA7208F1A4 /* CandidateWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CandidateWindow.swift; sourceTree = "<group>"; };
+		A7C89FD98AE741462472A4AF /* CandidateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CandidateView.swift; sourceTree = "<group>"; };
+		B87CA0E173DBD02BEE441D01 /* main.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = main.tiff; sourceTree = "<group>"; };
+		D11CE3AB4847B02A8D582272 /* words.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = words.txt; sourceTree = "<group>"; };
+		F26DF48F74F8D340A3350F9E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		FB1515354E186D1652ADDB3C /* SmartEnglish.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SmartEnglish.app; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		620C2BC88484CB34296DB07A /* SmartEnglish */ = {
+			isa = PBXGroup;
+			children = (
+				A7C89FD98AE741462472A4AF /* CandidateView.swift */,
+				A2A3A1895A7FC7FA7208F1A4 /* CandidateWindow.swift */,
+				F26DF48F74F8D340A3350F9E /* Info.plist */,
+				4750285F80D939F387D03897 /* main.swift */,
+				7507E18FA3D840BC3EE1315F /* SmartEnglishInputController.swift */,
+				3492535FE4115AB588F8E4CA /* WordDictionary.swift */,
+				A7E6F52FF866F9581832A628 /* Resources */,
+			);
+			path = SmartEnglish;
+			sourceTree = "<group>";
+		};
+		7FF0BACEF6C45AA1606F78F8 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				FB1515354E186D1652ADDB3C /* SmartEnglish.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		A7E6F52FF866F9581832A628 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				B87CA0E173DBD02BEE441D01 /* main.tiff */,
+				D11CE3AB4847B02A8D582272 /* words.txt */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		C0AC79605E9C2C03CA207AA0 = {
+			isa = PBXGroup;
+			children = (
+				620C2BC88484CB34296DB07A /* SmartEnglish */,
+				7FF0BACEF6C45AA1606F78F8 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		DEA4C58D60A936AEC4501807 /* SmartEnglish */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5E550C31D230418A0184BA94 /* Build configuration list for PBXNativeTarget "SmartEnglish" */;
+			buildPhases = (
+				832CCF3C652E429F36C90A59 /* Sources */,
+				80F8903D52BBC2E3F8697B55 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = SmartEnglish;
+			packageProductDependencies = (
+			);
+			productName = SmartEnglish;
+			productReference = FB1515354E186D1652ADDB3C /* SmartEnglish.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		F4686AC0C7816A9B6EF11611 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 2650;
+				TargetAttributes = {
+				};
+			};
+			buildConfigurationList = 8DA52148C864E5960D249CBC /* Build configuration list for PBXProject "SmartEnglish" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = C0AC79605E9C2C03CA207AA0;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 7FF0BACEF6C45AA1606F78F8 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				DEA4C58D60A936AEC4501807 /* SmartEnglish */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		80F8903D52BBC2E3F8697B55 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E2E555D6DEAEF7534765D2D6 /* main.tiff in Resources */,
+				E61F62D8F41703D5A2171E89 /* words.txt in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		832CCF3C652E429F36C90A59 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C161D5BC961CAA7706BC7177 /* CandidateView.swift in Sources */,
+				7C0D69D6DE3E79EDBCD9C47E /* CandidateWindow.swift in Sources */,
+				7DA6E5B2608A3C8102509C39 /* SmartEnglishInputController.swift in Sources */,
+				30A08585FF5A8E34450C5A99 /* WordDictionary.swift in Sources */,
+				26DAD59FB4AEE0E0C88DB735 /* main.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		5222DD22F868B7C90496946B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "-";
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = SmartEnglish/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.songhuiming.inputmethod.SmartEnglish;
+				PRODUCT_NAME = SmartEnglish;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		5DE787DC642BD5D1AAF562D0 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGNING_REQUIRED = NO;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		9058E84781A53E5258BC536E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "-";
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = SmartEnglish/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.songhuiming.inputmethod.SmartEnglish;
+				PRODUCT_NAME = SmartEnglish;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		BCCA88269C4214D6EC09A534 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGNING_REQUIRED = NO;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		5E550C31D230418A0184BA94 /* Build configuration list for PBXNativeTarget "SmartEnglish" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5222DD22F868B7C90496946B /* Debug */,
+				9058E84781A53E5258BC536E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		8DA52148C864E5960D249CBC /* Build configuration list for PBXProject "SmartEnglish" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5DE787DC642BD5D1AAF562D0 /* Debug */,
+				BCCA88269C4214D6EC09A534 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = F4686AC0C7816A9B6EF11611 /* Project object */;
+}

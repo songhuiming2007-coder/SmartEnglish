@@ -1,0 +1,32 @@
+name: SmartEnglish
+options:
+  bundleIdPrefix: com.songhuiming
+  deploymentTarget:
+    macOS: "13.0"
+  xcodeVersion: "26.5"
+
+settings:
+  base:
+    MACOSX_DEPLOYMENT_TARGET: "13.0"
+    SWIFT_VERSION: "5.0"
+    CODE_SIGN_IDENTITY: "-"
+    CODE_SIGNING_REQUIRED: "NO"
+
+targets:
+  SmartEnglish:
+    type: application
+    platform: macOS
+    sources:
+      - path: SmartEnglish
+        type: group
+    resources:
+      - path: SmartEnglish/Resources/words.txt
+      - path: SmartEnglish/Resources/main.tiff
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.songhuiming.inputmethod.SmartEnglish
+        INFOPLIST_FILE: SmartEnglish/Info.plist
+        CODE_SIGN_IDENTITY: "-"
+        PRODUCT_NAME: SmartEnglish
+        COMBINE_HIDPI_IMAGES: YES
+        LD_RUNPATH_SEARCH_PATHS: "$(inherited) @executable_path/../Frameworks"
