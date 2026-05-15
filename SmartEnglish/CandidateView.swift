@@ -10,7 +10,7 @@ class CandidateView: NSView {
     private let indexFont = NSFont.monospacedDigitSystemFont(ofSize: 11, weight: .regular)
     private let hPadding: CGFloat = 12
     private let itemSpacing: CGFloat = 20
-    private let vPadding: CGFloat = 5
+    private let itemInnerPadding: CGFloat = 6
 
     override var acceptsFirstResponder: Bool { true }
 
@@ -41,7 +41,8 @@ class CandidateView: NSView {
             let indexStr = "\(i + 1)"
             let indexSize = (indexStr as NSString).size(withAttributes: [.font: indexFont])
             let wordSize = (word as NSString).size(withAttributes: [.font: font])
-            totalWidth += indexSize.width + 4 + wordSize.width + itemSpacing
+            let contentWidth = indexSize.width + 4 + wordSize.width
+            totalWidth += contentWidth + itemInnerPadding * 2 + itemSpacing
         }
         // Arrow space
         totalWidth += 16 + hPadding
@@ -54,18 +55,21 @@ class CandidateView: NSView {
         NSColor.windowBackgroundColor.setFill()
         bgPath.fill()
 
+        // Calculate vertical center y for text
+        let fontHeight = max(font.ascender - font.descender, indexFont.ascender - indexFont.descender)
+        let centerY = (bounds.height - fontHeight) / 2
+
         var x: CGFloat = hPadding
-        let y: CGFloat = vPadding
         itemRects = []
 
         for (i, word) in candidates.enumerated() {
             let indexStr = "\(i + 1)"
+            let isHighlighted = (i == selectedIndex)
+
             let indexAttrs: [NSAttributedString.Key: Any] = [
                 .font: indexFont,
-                .foregroundColor: NSColor.secondaryLabelColor
+                .foregroundColor: isHighlighted ? NSColor.white : NSColor.secondaryLabelColor
             ]
-
-            let isHighlighted = (i == selectedIndex)
             let wordAttrs: [NSAttributedString.Key: Any] = [
                 .font: font,
                 .foregroundColor: isHighlighted ? NSColor.white : NSColor.labelColor
@@ -73,22 +77,33 @@ class CandidateView: NSView {
 
             let indexSize = (indexStr as NSString).size(withAttributes: indexAttrs)
             let wordSize = (word as NSString).size(withAttributes: wordAttrs)
-            let itemWidth = indexSize.width + 4 + wordSize.width
+            let contentWidth = indexSize.width + 4 + wordSize.width
 
-            let itemRect = NSRect(x: x - 3, y: 0, width: itemWidth + itemSpacing, height: bounds.height)
+            // Item rect: left padding + content + right padding
+            let itemRect = NSRect(
+                x: x,
+                y: 0,
+                width: contentWidth + itemInnerPadding * 2,
+                height: bounds.height
+            )
             itemRects.append(itemRect)
 
+            // Highlight background
             if isHighlighted {
-                let highlightRect = NSRect(x: x - 4, y: 1, width: itemWidth + 4, height: bounds.height - 2)
-                let highlightPath = NSBezierPath(roundedRect: highlightRect, xRadius: 6, yRadius: 6)
+                let highlightPath = NSBezierPath(roundedRect: itemRect, xRadius: 6, yRadius: 6)
                 NSColor.selectedContentBackgroundColor.setFill()
                 highlightPath.fill()
             }
 
-            (indexStr as NSString).draw(at: NSPoint(x: x, y: y), withAttributes: indexAttrs)
-            x += indexSize.width + 4
-            (word as NSString).draw(at: NSPoint(x: x, y: y), withAttributes: wordAttrs)
-            x += wordSize.width + itemSpacing
+            // Draw index vertically centered
+            let indexY = centerY + (fontHeight - indexSize.height) / 2
+            (indexStr as NSString).draw(at: NSPoint(x: x + itemInnerPadding, y: indexY), withAttributes: indexAttrs)
+
+            // Draw word vertically centered
+            let wordY = centerY + (fontHeight - wordSize.height) / 2
+            (word as NSString).draw(at: NSPoint(x: x + itemInnerPadding + indexSize.width + 4, y: wordY), withAttributes: wordAttrs)
+
+            x += itemRect.width + itemSpacing
         }
 
         // Arrow "∨"
@@ -98,7 +113,8 @@ class CandidateView: NSView {
         ]
         let arrowStr = "∨"
         let arrowSize = (arrowStr as NSString).size(withAttributes: arrowAttrs)
-        (arrowStr as NSString).draw(at: NSPoint(x: bounds.width - hPadding - arrowSize.width, y: y), withAttributes: arrowAttrs)
+        let arrowY = centerY + (fontHeight - arrowSize.height) / 2
+        (arrowStr as NSString).draw(at: NSPoint(x: bounds.width - hPadding - arrowSize.width, y: arrowY), withAttributes: arrowAttrs)
     }
 
     override func mouseMoved(with event: NSEvent) {
