@@ -241,6 +241,23 @@ footer .links { display: flex; gap: 20px; }
 footer .links a { font-size: 13px; color: var(--text-secondary); }
 footer .links a:hover { color: var(--text); }
 
+/* ===== LANGUAGE TOGGLE ===== */
+body:not(.lang-zh) .zh { display: none; }
+body.lang-zh .en { display: none; }
+.lang-toggle {
+  display: inline-flex; align-items: center; gap: 0;
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: 6px; overflow: hidden; font-size: 13px; cursor: pointer;
+}
+.lang-toggle button {
+  background: transparent; border: none; color: var(--text-secondary);
+  padding: 4px 10px; font-family: var(--font); font-size: 13px;
+  cursor: pointer; transition: all 0.2s;
+}
+.lang-toggle button.active {
+  background: var(--blue); color: #fff;
+}
+
 /* ===== SCROLLBAR ===== */
 ::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-track { background: var(--bg); }
@@ -257,12 +274,16 @@ footer .links a:hover { color: var(--text); }
       SmartEnglish
     </a>
     <div class="nav-links">
-      <a href="#features">Features</a>
-      <a href="#install">Install</a>
-      <a href="#troubleshooting">Troubleshooting</a>
-      <a href="#download">Download</a>
+      <a href="#features" data-en="Features" data-zh="功能">Features</a>
+      <a href="#install" data-en="Install" data-zh="安装">Install</a>
+      <a href="#troubleshooting" data-en="Troubleshooting" data-zh="问题排查">Troubleshooting</a>
+      <a href="#download" data-en="Download" data-zh="下载">Download</a>
       <a href="https://github.com/songhuiming2007-coder/SmartEnglish" target="_blank">GitHub</a>
     </div>
+    <span class="lang-toggle">
+      <button id="lang-en" class="active" onclick="setLang('en')">EN</button>
+      <button id="lang-zh" onclick="setLang('zh')">中文</button>
+    </span>
   </div>
 </nav>
 
@@ -271,22 +292,23 @@ footer .links a:hover { color: var(--text); }
   <div class="container">
     <div class="hero-badge">
       <span class="dot"></span>
-      v0.2.0 — Smart casing & proper nouns
+      <span data-en="v0.2.0 — Smart casing &amp; proper nouns" data-zh="v0.2.0 — 智能大小写 &amp; 专有名词">v0.2.0 — Smart casing &amp; proper nouns</span>
     </div>
     <h1>
-      <span class="dim">iPhone-style</span><br>
-      <span class="gradient">predictive text</span><br>
-      <span class="dim">for your Mac.</span>
+      <span class="dim"><span class="en">iPhone-style</span><span class="zh">iPhone 式</span></span><br>
+      <span class="gradient"><span class="en">predictive text</span><span class="zh">智能联想</span></span><br>
+      <span class="dim"><span class="en">for your Mac.</span><span class="zh">为你的 Mac 而来。</span></span>
     </h1>
-    <p>SmartEnglish brings the word suggestions you love on iPhone to every app on macOS. Type a few letters, pick the word. That simple.</p>
+    <p class="en">SmartEnglish brings the word suggestions you love on iPhone to every app on macOS. Type a few letters, pick the word. That simple.</p>
+    <p class="zh">SmartEnglish 把你在 iPhone 上喜爱的联想词功能带到 macOS 的每个应用中。输入几个字母，选择单词，就这么简单。</p>
     <div class="hero-buttons">
       <a href="#download" class="btn btn-primary">
         <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 1v10M4 7l4 4 4-4M2 13h12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        Download for macOS
+        <span class="en">Download for macOS</span><span class="zh">下载 macOS 版</span>
       </a>
       <a href="https://github.com/songhuiming2007-coder/SmartEnglish" target="_blank" class="btn btn-secondary">
         <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
-        View on GitHub
+        <span class="en">View on GitHub</span><span class="zh">在 GitHub 查看</span>
       </a>
     </div>
   </div>
@@ -312,49 +334,49 @@ footer .links a:hover { color: var(--text); }
 <!-- FEATURES -->
 <section class="features" id="features">
   <div class="container">
-    <div class="section-label">Features</div>
-    <div class="section-title">Everything you need,<br>nothing you don't.</div>
-    <div class="section-desc">A minimal, fast, privacy-first predictive text engine for macOS &mdash; now with smart casing and proper noun support.</div>
+    <div class="section-label" data-en="Features" data-zh="功能">Features</div>
+    <div class="section-title"><span class="en">Everything you need,<br>nothing you don't.</span><span class="zh">你需要的全都有，不需要的全没有。</span></div>
+    <div class="section-desc"><span class="en">A minimal, fast, privacy-first predictive text engine for macOS &mdash; now with smart casing and proper noun support.</span><span class="zh">一个极简、快速、隐私优先的 macOS 联想输入引擎 &mdash; 现已支持智能大小写和专有名词。</span></div>
     <div class="features-grid">
       <div class="feature-card">
         <div class="feature-icon">&#9889;</div>
-        <h3>Instant predictions</h3>
-        <p>Candidates appear as you type, powered by a 50,000-word frequency dictionary. Sub-millisecond lookups, zero lag.</p>
+        <h3 data-en="Instant predictions" data-zh="即时联想">Instant predictions</h3>
+        <p><span class="en">Candidates appear as you type, powered by a 50,000-word frequency dictionary. Sub-millisecond lookups, zero lag.</span><span class="zh">输入时即时显示候选词，基于 50,000 词频词典。亚毫秒级查找，零延迟。</span></p>
       </div>
       <div class="feature-card">
         <div class="feature-icon">&#127760;</div>
-        <h3>Works everywhere</h3>
-        <p>Built as a native macOS input method &mdash; works in every app, from Safari to VS Code to Slack. No compatibility hacks.</p>
+        <h3 data-en="Works everywhere" data-zh="全局可用">Works everywhere</h3>
+        <p><span class="en">Built as a native macOS input method &mdash; works in every app, from Safari to VS Code to Slack. No compatibility hacks.</span><span class="zh">原生 macOS 输入法 &mdash; 在所有应用中均可使用，从 Safari 到 VS Code 到 Slack。无需兼容性补丁。</span></p>
       </div>
       <div class="feature-card">
         <div class="feature-icon">&#129504;</div>
-        <h3>Learns from you</h3>
-        <p>SmartEnglish remembers your word choices and boosts them in future suggestions. Gets better the more you use it.</p>
+        <h3 data-en="Learns from you" data-zh="越用越懂你">Learns from you</h3>
+        <p><span class="en">SmartEnglish remembers your word choices and boosts them in future suggestions. Gets better the more you use it.</span><span class="zh">SmartEnglish 记住你的用词偏好，在后续推荐中优先显示。用得越多，越好用。</span></p>
       </div>
       <div class="feature-card">
         <div class="feature-icon">&#127919;</div>
-        <h3>Keyboard-first</h3>
-        <p>Press 1-9 to pick a candidate, Space to accept the top pick, Enter to commit raw text. Your fingers never leave the keyboard.</p>
+        <h3 data-en="Keyboard-first" data-zh="纯键盘操作">Keyboard-first</h3>
+        <p><span class="en">Press 1-9 to pick a candidate, Space to accept the top pick, Enter to commit raw text. Your fingers never leave the keyboard.</span><span class="zh">按 1-9 选择候选词，空格确认首选，回车直接上屏原始文本。手指无需离开键盘。</span></p>
       </div>
       <div class="feature-card">
         <div class="feature-icon">&#129718;</div>
-        <h3>Featherweight</h3>
-        <p>Under 3 MB memory footprint. No background processes, no telemetry, no network calls. Pure local computation.</p>
+        <h3 data-en="Featherweight" data-zh="极致轻量">Featherweight</h3>
+        <p><span class="en">Under 3 MB memory footprint. No background processes, no telemetry, no network calls. Pure local computation.</span><span class="zh">内存占用不到 3 MB。无后台进程、无遥测、无网络请求。纯本地计算。</span></p>
       </div>
       <div class="feature-card">
         <div class="feature-icon">&#128274;</div>
-        <h3>Open source</h3>
-        <p>MIT licensed. Read every line, fork it, improve it. Your input method should have nothing to hide.</p>
+        <h3 data-en="Open source" data-zh="开源免费">Open source</h3>
+        <p><span class="en">MIT licensed. Read every line, fork it, improve it. Your input method should have nothing to hide.</span><span class="zh">MIT 许可证。阅读每一行代码，自由 fork、改进。你的输入法不该有任何秘密。</span></p>
       </div>
       <div class="feature-card">
         <div class="feature-icon">&#9997;&#65039;</div>
-        <h3>Smart casing</h3>
-        <p>Input case is preserved in output. Type <code style="font-family:var(--mono);font-size:13px;background:var(--bg);padding:1px 6px;border-radius:4px;">ENG</code> and get <strong>ENGLAND</strong>, type <code style="font-family:var(--mono);font-size:13px;background:var(--bg);padding:1px 6px;border-radius:4px;">Eng</code> and get <strong>England</strong>. No manual shifting needed.</p>
+        <h3 data-en="Smart casing" data-zh="智能大小写">Smart casing</h3>
+        <p><span class="en">Input case is preserved in output. Type <code style="font-family:var(--mono);font-size:13px;background:var(--bg);padding:1px 6px;border-radius:4px;">ENG</code> and get <strong>ENGLAND</strong>, type <code style="font-family:var(--mono);font-size:13px;background:var(--bg);padding:1px 6px;border-radius:4px;">Eng</code> and get <strong>England</strong>. No manual shifting needed.</span><span class="zh">输入大小写会保留在输出中。输入 <code style="font-family:var(--mono);font-size:13px;background:var(--bg);padding:1px 6px;border-radius:4px;">ENG</code> 得到 <strong>ENGLAND</strong>，输入 <code style="font-family:var(--mono);font-size:13px;background:var(--bg);padding:1px 6px;border-radius:4px;">Eng</code> 得到 <strong>England</strong>。无需手动切换大小写。</span></p>
       </div>
       <div class="feature-card">
         <div class="feature-icon">&#127758;</div>
-        <h3>Proper nouns</h3>
-        <p>448 built-in proper nouns &mdash; countries, languages, and more. Type <code style="font-family:var(--mono);font-size:13px;background:var(--bg);padding:1px 6px;border-radius:4px;">chin</code> and SmartEnglish outputs <strong>China</strong> automatically.</p>
+        <h3 data-en="Proper nouns" data-zh="专有名词">Proper nouns</h3>
+        <p><span class="en">448 built-in proper nouns &mdash; countries, languages, and more. Type <code style="font-family:var(--mono);font-size:13px;background:var(--bg);padding:1px 6px;border-radius:4px;">chin</code> and SmartEnglish outputs <strong>China</strong> automatically.</span><span class="zh">内置 448 个专有名词 &mdash; 国家、语言等。输入 <code style="font-family:var(--mono);font-size:13px;background:var(--bg);padding:1px 6px;border-radius:4px;">chin</code>，SmartEnglish 自动输出 <strong>China</strong>。</span></p>
       </div>
     </div>
   </div>
@@ -363,54 +385,54 @@ footer .links a:hover { color: var(--text); }
 <!-- INSTALL -->
 <section class="install" id="install">
   <div class="container">
-    <div class="section-label">Installation</div>
-    <div class="section-title">Up and running in 2 minutes.</div>
-    <div class="section-desc">Follow these steps carefully. macOS has strict security settings for third-party input methods.</div>
+    <div class="section-label" data-en="Installation" data-zh="安装">Installation</div>
+    <div class="section-title" data-en="Up and running in 2 minutes." data-zh="2 分钟搞定安装。">Up and running in 2 minutes.</div>
+    <div class="section-desc"><span class="en">Follow these steps carefully. macOS has strict security settings for third-party input methods.</span><span class="zh">请仔细按以下步骤操作。macOS 对第三方输入法有严格的安全限制。</span></div>
     <div class="steps">
       <div class="step">
         <div class="step-num">1</div>
         <div class="step-content">
-          <h3>Allow apps from anywhere</h3>
-          <p>macOS blocks unsigned apps by default. Open <strong>Terminal</strong> and run:</p>
+          <h3 data-en="Allow apps from anywhere" data-zh="允许任何来源应用">Allow apps from anywhere</h3>
+          <p><span class="en">macOS blocks unsigned apps by default. Open <strong>Terminal</strong> and run:</span><span class="zh">macOS 默认阻止未签名应用。打开 <strong>终端</strong> 并运行：</span></p>
           <p><code>sudo spctl --master-disable</code></p>
-          <p>Then open <strong>System Settings</strong> (press <code>Cmd+Space</code> and search <strong>"隐私与安全性"</strong> to jump there directly), scroll down to <strong>"Allow apps downloaded from"</strong> and select <strong>Anywhere</strong>. You can change this back after installation.</p>
+          <p><span class="en">Then open <strong>System Settings</strong> (press <code>Cmd+Space</code> and search <strong>"Privacy &amp; Security"</strong> to jump there directly), scroll down to <strong>"Allow apps downloaded from"</strong> and select <strong>Anywhere</strong>. You can change this back after installation.</span><span class="zh">然后打开 <strong>系统设置</strong>（按 <code>Cmd+Space</code> 搜索 <strong>"隐私与安全性"</strong> 直接跳转），向下滚动到 <strong>"允许从以下位置下载的应用"</strong>，选择 <strong>"任何来源"</strong>。安装完成后可恢复此设置。</span></p>
         </div>
       </div>
       <div class="step">
         <div class="step-num">2</div>
         <div class="step-content">
-          <h3>Download the installer</h3>
-          <p>Click the <strong>Download .pkg</strong> button above to get <code>SmartEnglish.pkg</code>.</p>
+          <h3 data-en="Download the installer" data-zh="下载安装器">Download the installer</h3>
+          <p><span class="en">Click the <strong>Download .pkg</strong> button above to get <code>SmartEnglish.pkg</code>.</span><span class="zh">点击上方的 <strong>Download .pkg</strong> 按钮下载 <code>SmartEnglish.pkg</code>。</span></p>
         </div>
       </div>
       <div class="step">
         <div class="step-num">3</div>
         <div class="step-content">
-          <h3>Run the installer</h3>
-          <p>Double-click <code>SmartEnglish.pkg</code> and follow the prompts. The installer automatically copies the app to <code>~/Library/Input Methods/</code> and removes quarantine flags. No Terminal commands needed.</p>
+          <h3 data-en="Run the installer" data-zh="运行安装器">Run the installer</h3>
+          <p><span class="en">Double-click <code>SmartEnglish.pkg</code> and follow the prompts. The installer automatically copies the app to <code>~/Library/Input Methods/</code> and removes quarantine flags. No Terminal commands needed.</span><span class="zh">双击 <code>SmartEnglish.pkg</code> 并按提示操作。安装器会自动将应用复制到 <code>~/Library/Input Methods/</code> 并移除隔离标记。无需终端命令。</span></p>
         </div>
       </div>
       <div class="step">
         <div class="step-num">4</div>
         <div class="step-content">
-          <h3>Add input source</h3>
-          <p>Go to <strong>System Settings → Keyboard → Input Sources</strong>, click <strong>+</strong>, find <strong>English</strong>, select <strong>SmartEnglish</strong>, click <strong>Add</strong>.</p>
-          <p><em>If SmartEnglish doesn't appear in the list, restart your Mac and try again.</em></p>
+          <h3 data-en="Add input source" data-zh="添加输入源">Add input source</h3>
+          <p><span class="en">Go to <strong>System Settings → Keyboard → Input Sources</strong>, click <strong>+</strong>, find <strong>English</strong>, select <strong>SmartEnglish</strong>, click <strong>Add</strong>.</span><span class="zh">前往 <strong>系统设置 → 键盘 → 输入源</strong>，点击 <strong>+</strong>，找到 <strong>English</strong>，选择 <strong>SmartEnglish</strong>，点击 <strong>添加</strong>。</span></p>
+          <p><em><span class="en">If SmartEnglish doesn't appear in the list, restart your Mac and try again.</span><span class="zh">如果列表中没有 SmartEnglish，请重启 Mac 后重试。</span></em></p>
         </div>
       </div>
       <div class="step">
         <div class="step-num">5</div>
         <div class="step-content">
-          <h3>Restart your Mac (if needed)</h3>
-          <p>After adding the input source, you <strong>may need to restart</strong> for it to appear in the menu bar. This is a macOS limitation &mdash; the system caches input sources and a reboot forces a refresh.</p>
-          <p>After restart, click the input method icon in the menu bar (or press <code>Ctrl+Space</code>) to switch to SmartEnglish.</p>
+          <h3 data-en="Restart your Mac (if needed)" data-zh="重启 Mac（如需要）">Restart your Mac (if needed)</h3>
+          <p><span class="en">After adding the input source, you <strong>may need to restart</strong> for it to appear in the menu bar. This is a macOS limitation &mdash; the system caches input sources and a reboot forces a refresh.</span><span class="zh">添加输入源后，<strong>可能需要重启</strong> 才能在菜单栏看到它。这是 macOS 的限制 &mdash; 系统会缓存输入源列表，重启可强制刷新。</span></p>
+          <p><span class="en">After restart, click the input method icon in the menu bar (or press <code>Ctrl+Space</code>) to switch to SmartEnglish.</span><span class="zh">重启后，点击菜单栏输入法图标（或按 <code>Ctrl+Space</code>）切换到 SmartEnglish。</span></p>
         </div>
       </div>
       <div class="step">
         <div class="step-num">6</div>
         <div class="step-content">
-          <h3>Start typing!</h3>
-          <p>Type a few letters in any app &mdash; a candidate window will appear. Press <code>1</code>-<code>9</code> to pick a word, <code>Space</code> to accept the top pick, <code>Enter</code> to commit raw text.</p>
+          <h3 data-en="Start typing!" data-zh="开始输入！">Start typing!</h3>
+          <p><span class="en">Type a few letters in any app &mdash; a candidate window will appear. Press <code>1</code>-<code>9</code> to pick a word, <code>Space</code> to accept the top pick, <code>Enter</code> to commit raw text.</span><span class="zh">在任意应用中输入几个字母 &mdash; 候选词窗口会自动出现。按 <code>1</code>-<code>9</code> 选择单词，<code>空格</code> 确认首选，<code>回车</code> 直接上屏原始文本。</span></p>
         </div>
       </div>
     </div>
@@ -420,64 +442,84 @@ footer .links a:hover { color: var(--text); }
 <!-- TROUBLESHOOTING -->
 <section class="features" id="troubleshooting">
   <div class="container">
-    <div class="section-label">Troubleshooting</div>
-    <div class="section-title">遇到问题？</div>
-    <div class="section-desc">macOS 对第三方输入法限制较多，以下是常见问题和解决方法。</div>
+    <div class="section-label" data-en="Troubleshooting" data-zh="问题排查">Troubleshooting</div>
+    <div class="section-title" data-en="Having problems?" data-zh="遇到问题？">Having problems?</div>
+    <div class="section-desc"><span class="en">macOS has strict restrictions on third-party input methods. Here are common issues and solutions.</span><span class="zh">macOS 对第三方输入法限制较多，以下是常见问题和解决方法。</span></div>
     <div class="features-grid">
       <div class="feature-card">
         <div class="feature-icon">&#128683;</div>
-        <h3>安装时提示"无法打开"</h3>
-        <p>macOS 会阻止未签名应用。解决方法：<br>
+        <h3><span class="en">App blocked during install</span><span class="zh">安装时提示"无法打开"</span></h3>
+        <p><span class="en">macOS blocks unsigned apps. Solution:<br>
+        1. Open <strong>Terminal</strong>, run <code>sudo spctl --master-disable</code><br>
+        2. Press <code>Cmd+Space</code>, search <strong>"Privacy &amp; Security"</strong>, select <strong>"Anywhere"</strong><br>
+        3. Double-click <code>.pkg</code> again to install<br>
+        <em>You can restore security settings after installation</em></span><span class="zh">macOS 会阻止未签名应用。解决方法：<br>
         1. 打开终端，运行 <code>sudo spctl --master-disable</code><br>
         2. 按 <code>Cmd+Space</code> 搜索 <strong>"隐私与安全性"</strong>，打开后选择 <strong>"任何来源"</strong><br>
         3. 重新双击 <code>.pkg</code> 安装<br>
-        <em>安装完成后可恢复安全设置</em></p>
+        <em>安装完成后可恢复安全设置</em></span></p>
       </div>
       <div class="feature-card">
         <div class="feature-icon">&#128260;</div>
-        <h3>输入法列表里找不到 SmartEnglish</h3>
-        <p>安装后在系统设置的输入源列表中看不到：<br>
+        <h3><span class="en">Can't find SmartEnglish in input source list</span><span class="zh">输入法列表里找不到 SmartEnglish</span></h3>
+        <p><span class="en">If SmartEnglish doesn't appear in System Settings input sources:<br>
+        1. Make sure you ran the <code>.pkg</code> installer (not just downloaded it)<br>
+        2. Check <code>~/Library/Input Methods/</code> for <code>SmartEnglish.app</code><br>
+        3. <strong>Restart your Mac</strong>, then re-add the input source<br>
+        <em>macOS caches the input source list; a restart is the most reliable fix</em></span><span class="zh">安装后在系统设置的输入源列表中看不到：<br>
         1. 确认已运行 <code>.pkg</code> 安装器（不是只下载了）<br>
         2. 检查 <code>~/Library/Input Methods/</code> 目录是否有 <code>SmartEnglish.app</code><br>
         3. <strong>重启电脑</strong>，然后重新添加输入源<br>
-        <em>macOS 缓存输入源列表，重启是最可靠的解决方法</em></p>
+        <em>macOS 缓存输入源列表，重启是最可靠的解决方法</em></span></p>
       </div>
       <div class="feature-card">
         <div class="feature-icon">&#9000;</div>
-        <h3>输入法显示为灰色 / 无法使用</h3>
-        <p>添加输入源后如果显示灰色：<br>
+        <h3><span class="en">Input method greyed out / unusable</span><span class="zh">输入法显示为灰色 / 无法使用</span></h3>
+        <p><span class="en">If the input source appears greyed out after adding:<br>
+        1. Quit System Settings completely<br>
+        2. Reopen System Settings → Keyboard → Input Sources<br>
+        3. If still not working, <strong>restart your Mac</strong><br>
+        4. After restart, click the input method icon in the menu bar and select SmartEnglish</span><span class="zh">添加输入源后如果显示灰色：<br>
         1. 完全退出系统设置<br>
         2. 重新打开系统设置 → 键盘 → 输入源<br>
         3. 如果仍不行，<strong>重启电脑</strong><br>
-        4. 重启后点击菜单栏输入法图标，选择 SmartEnglish</p>
+        4. 重启后点击菜单栏输入法图标，选择 SmartEnglish</span></p>
       </div>
       <div class="feature-card">
         <div class="feature-icon">&#128274;</div>
-        <h3>如何切换输入法</h3>
-        <p>切换到 SmartEnglish：<br>
+        <h3><span class="en">How to switch input methods</span><span class="zh">如何切换输入法</span></h3>
+        <p><span class="en">Switch to SmartEnglish:<br>
+        • Press <code>Control + Space</code> to cycle input sources<br>
+        • Or press the <code>Globe key</code> to cycle<br>
+        • Or click the input method icon in the menu bar<br>
+        <em>Note: Caps Lock only switches between English and ABC, not custom input methods</em></span><span class="zh">切换到 SmartEnglish：<br>
         • 按 <code>Control + 空格</code> 切换输入源<br>
         • 或按 <code>地球键</code> (Globe key) 循环切换<br>
         • 或点击菜单栏输入法图标选择<br>
-        <em>注意：Caps Lock 只在英文和 ABC 之间切换，不包含自定义输入法</em></p>
+        <em>注意：Caps Lock 只在英文和 ABC 之间切换，不包含自定义输入法</em></span></p>
       </div>
       <div class="feature-card">
         <div class="feature-icon">&#128196;</div>
-        <h3>候选词窗口不出现</h3>
-        <p>确保已切换到 SmartEnglish（菜单栏显示 SE 图标）。输入英文字母后会自动显示候选词。按 <code>1-9</code> 选择，<code>空格</code> 确认第一个，<code>回车</code> 直接上屏原始字母。</p>
+        <h3><span class="en">Candidate window not appearing</span><span class="zh">候选词窗口不出现</span></h3>
+        <p><span class="en">Make sure you've switched to SmartEnglish (menu bar shows SE icon). Type English letters and the candidate window appears automatically. Press <code>1-9</code> to select, <code>Space</code> to accept the first pick, <code>Enter</code> to commit raw text.</span><span class="zh">确保已切换到 SmartEnglish（菜单栏显示 SE 图标）。输入英文字母后会自动显示候选词。按 <code>1-9</code> 选择，<code>空格</code> 确认第一个，<code>回车</code> 直接上屏原始字母。</span></p>
       </div>
       <div class="feature-card">
         <div class="feature-icon">&#128260;</div>
-        <h3>更新或卸载</h3>
-        <p><strong>更新</strong>：下载新版 <code>.pkg</code>，双击安装即可覆盖<br>
+        <h3><span class="en">Update or uninstall</span><span class="zh">更新或卸载</span></h3>
+        <p><span class="en"><strong>Update</strong>: Download the latest <code>.pkg</code> and double-click to install (overwrites the old version)<br>
+        <strong>Uninstall</strong>:<br>
+        1. System Settings → Keyboard → Input Sources → remove SmartEnglish<br>
+        2. Delete <code>~/Library/Input Methods/SmartEnglish.app</code></span><span class="zh"><strong>更新</strong>：下载新版 <code>.pkg</code>，双击安装即可覆盖<br>
         <strong>卸载</strong>：<br>
         1. 系统设置 → 键盘 → 输入源 → 移除 SmartEnglish<br>
-        2. 删除 <code>~/Library/Input Methods/SmartEnglish.app</code></p>
+        2. 删除 <code>~/Library/Input Methods/SmartEnglish.app</code></span></p>
       </div>
       <div class="feature-card">
         <div class="feature-icon">&#128101;</div>
-        <h3>反馈与帮助</h3>
-        <p>遇到其他问题或有建议？<br>
-        请在 <a href="https://github.com/songhuiming2007-coder/SmartEnglish/issues" target="_blank">GitHub Issues</a> 提交反馈，我们会尽快回复。</p>
+        <h3><span class="en">Feedback &amp; help</span><span class="zh">反馈与帮助</span></h3>
+        <p><span class="en">Have questions or suggestions?<br>
+        Submit feedback on <a href="https://github.com/songhuiming2007-coder/SmartEnglish/issues" target="_blank">GitHub Issues</a> and we'll respond as soon as possible.</span><span class="zh">遇到其他问题或有建议？<br>
+        请在 <a href="https://github.com/songhuiming2007-coder/SmartEnglish/issues" target="_blank">GitHub Issues</a> 提交反馈，我们会尽快回复。</span></p>
       </div>
     </div>
   </div>
@@ -487,8 +529,8 @@ footer .links a:hover { color: var(--text); }
 <section class="download" id="download">
   <div class="container">
     <div class="download-card">
-      <h2>Download SmartEnglish</h2>
-      <p class="subtitle">Free, open source, no account required.</p>
+      <h2 data-en="Download SmartEnglish" data-zh="下载 SmartEnglish">Download SmartEnglish</h2>
+      <p class="subtitle" data-en="Free, open source, no account required." data-zh="免费、开源、无需注册。">Free, open source, no account required.</p>
       <div class="download-meta">
         <span>macOS 13+</span>
         <span>&bull;</span>
@@ -499,11 +541,11 @@ footer .links a:hover { color: var(--text); }
       <div class="download-buttons">
         <a href="https://github.com/songhuiming2007-coder/SmartEnglish/releases/latest/download/SmartEnglish.pkg" class="btn btn-primary">
           <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 1v10M4 7l4 4 4-4M2 13h12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          Download .pkg
+          <span class="en">Download .pkg</span><span class="zh">下载 .pkg</span>
         </a>
-        <a href="https://github.com/songhuiming2007-coder/SmartEnglish/releases" target="_blank" class="btn btn-secondary">All releases</a>
+        <a href="https://github.com/songhuiming2007-coder/SmartEnglish/releases" target="_blank" class="btn btn-secondary"><span class="en">All releases</span><span class="zh">所有版本</span></a>
       </div>
-      <p class="download-note">Double-click the <code>.pkg</code> file to install &mdash; no security warnings, no extra steps.</p>
+      <p class="download-note"><span class="en">Double-click the <code>.pkg</code> file to install &mdash; no security warnings, no extra steps.</span><span class="zh">双击 <code>.pkg</code> 文件即可安装 &mdash; 无安全警告，无额外步骤。</span></p>
     </div>
   </div>
 </section>
@@ -511,16 +553,32 @@ footer .links a:hover { color: var(--text); }
 <!-- FOOTER -->
 <footer>
   <div class="container">
-    <p>&copy; 2026 SmartEnglish &middot; Built by <a href="https://github.com/songhuiming2007-coder" target="_blank">songhuiming</a></p>
+    <p>&copy; 2026 SmartEnglish &middot; <span class="en">Built by</span><span class="zh">开发者</span> <a href="https://github.com/songhuiming2007-coder" target="_blank">songhuiming</a></p>
     <div class="links">
       <a href="https://github.com/songhuiming2007-coder/SmartEnglish" target="_blank">GitHub</a>
       <a href="https://github.com/songhuiming2007-coder/SmartEnglish/issues" target="_blank">Issues</a>
-      <a href="https://github.com/songhuiming2007-coder/SmartEnglish/blob/main/LICENSE" target="_blank">MIT License</a>
+      <a href="https://github.com/songhuiming2007-coder/SmartEnglish/blob/main/LICENSE" target="_blank"><span class="en">MIT License</span><span class="zh">MIT 许可证</span></a>
     </div>
   </div>
 </footer>
 
 <script>
+// Language toggle
+function setLang(l) {
+  document.body.classList.toggle('lang-zh', l === 'zh');
+  document.getElementById('lang-en').classList.toggle('active', l === 'en');
+  document.getElementById('lang-zh').classList.toggle('active', l === 'zh');
+  localStorage.setItem('lang', l);
+  document.querySelectorAll('[data-en]').forEach(el => {
+    el.textContent = el.getAttribute(l === 'zh' ? 'data-zh' : 'data-en');
+  });
+  document.documentElement.lang = l === 'zh' ? 'zh-CN' : 'en';
+}
+
+// Restore saved language
+const savedLang = localStorage.getItem('lang') || 'en';
+if (savedLang === 'zh') setLang('zh');
+
 // Nav scroll effect
 const nav = document.getElementById('nav');
 window.addEventListener('scroll', () => {
