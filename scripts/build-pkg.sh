@@ -5,7 +5,7 @@ set -e
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 PROJECT_DIR="$(dirname "$SCRIPT_DIR")"
 APP_NAME="SmartEnglish"
-VERSION="0.2.0"
+VERSION="0.2.1"
 BUILD_DIR="$PROJECT_DIR/build/pkg"
 DIST_DIR="$PROJECT_DIR/dist"
 
@@ -170,10 +170,10 @@ productbuild \
     --distribution "$BUILD_DIR/distribution.xml" \
     --package-path "$BUILD_DIR" \
     --resources "$BUILD_DIR" \
-    "$DIST_DIR/SmartEnglish-${VERSION}.pkg"
+    "$DIST_DIR/SmartEnglish.pkg"
 
 echo ""
-echo "✓ Package created: dist/SmartEnglish-${VERSION}.pkg"
+echo "✓ Package created: dist/SmartEnglish.pkg"
 echo ""
 
 # Clean up build directory
