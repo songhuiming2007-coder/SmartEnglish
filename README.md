@@ -4,10 +4,36 @@ macOS 英文预测输入法。输入英文字母时实时弹出候选词窗口�
 
 ## 下载安装
 
+### 第 1 步：允许"任何来源"应用
+
+macOS 默认阻止未签名应用，需要先解除限制：
+
+```bash
+sudo spctl --master-disable
+```
+
+然后打开 **系统设置 → 隐私与安全性**，在"允许以下来源的应用"中选择 **任何来源**。
+
+> 安装完成后可以恢复原来的设置。
+
+### 第 2 步：下载并安装
+
 1. 下载 [SmartEnglish.pkg](https://github.com/songhuiming2007-coder/SmartEnglish/releases/latest/download/SmartEnglish.pkg)
-2. 双击打开，按向导完成安装
-3. 系统设置 → 键盘 → 输入源 → 点击 + → English → SmartEnglish
-4. 按 `Ctrl+Space` 切换到 SmartEnglish 即可使用
+2. 双击 `.pkg` 文件，按向导完成安装
+3. 安装器会自动将 app 复制到 `~/Library/Input Methods/` 并移除隔离标记
+
+### 第 3 步：添加输入源
+
+1. 打开 **系统设置 → 键盘 → 输入源**
+2. 点击 **+**，找到 **English**，选择 **SmartEnglish**，点击 **添加**
+
+> 如果列表中看不到 SmartEnglish，请**重启电脑**后重试。macOS 会缓存输入源列表，重启是最可靠的解决方法。
+
+### 第 4 步：开始使用
+
+- 按 `Ctrl+Space` 或 `地球键` 切换到 SmartEnglish
+- 输入字母，候选词窗口自动弹出
+- 按 `1-9` 选词，`空格` 确认第一个，`回车` 直接上屏原始字母
 
 **更新**：下载新版 .pkg，双击安装即可覆盖。
 
@@ -23,6 +49,8 @@ make pkg         # 构建 .pkg 安装器
 2. 点击 + 添加输入源
 3. 在 English 分类下找到 SmartEnglish
 4. 菜单栏切换到 SmartEnglish 即可使用
+
+如果输入法列表中看不到 SmartEnglish，重启电脑后重试。
 
 更新安装后：切换到其他输入法再切回来，或注销重新登录。
 

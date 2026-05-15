@@ -23,19 +23,30 @@ echo "Building ${APP_NAME} installer..."
 # Clean and create directories
 rm -rf "$BUILD_DIR"
 rm -rf "$DIST_DIR"
-mkdir -p "$BUILD_DIR/component"
+mkdir -p "$BUILD_DIR/scripts"
 mkdir -p "$DIST_DIR"
 
-# Copy app to component directory
-cp -R "$APP_PATH" "$BUILD_DIR/component/"
+# Copy .app to scripts directory (will be installed by postinstall)
+cp -R "$APP_PATH" "$BUILD_DIR/scripts/"
 
-# Create postinstall script
-cat > "$BUILD_DIR/postinstall" << 'POSTINSTALL'
+# Create postinstall script that handles the actual installation
+cat > "$BUILD_DIR/scripts/postinstall" << 'POSTINSTALL'
 #!/bin/bash
 # Post-installation script for SmartEnglish
+set -e
 
 APP_NAME="SmartEnglish"
 INSTALL_DIR="$HOME/Library/Input Methods"
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+
+# Create directory if needed
+mkdir -p "$INSTALL_DIR"
+
+# Remove old installation
+rm -rf "$INSTALL_DIR/$APP_NAME.app"
+
+# Copy app from scripts directory to Input Methods
+cp -R "$SCRIPT_DIR/$APP_NAME.app" "$INSTALL_DIR/"
 
 # Remove quarantine attribute
 xattr -d com.apple.quarantine "$INSTALL_DIR/$APP_NAME.app" 2>/dev/null || true
@@ -62,15 +73,16 @@ killall SmartEnglish 2>/dev/null || true
 exit 0
 POSTINSTALL
 
-chmod +x "$BUILD_DIR/postinstall"
+chmod +x "$BUILD_DIR/scripts/postinstall"
 
-# Create component package
+# Create a dummy component package (postinstall does the real work)
+mkdir -p "$BUILD_DIR/empty"
 pkgbuild \
-    --component "$BUILD_DIR/component/${APP_NAME}.app" \
-    --install-location "$HOME/Library/Input Methods" \
+    --root "$BUILD_DIR/empty" \
+    --install-location "/tmp/.SmartEnglish-installer" \
     --identifier "com.songhuiming.pkg.SmartEnglish" \
     --version "$VERSION" \
-    --scripts "$BUILD_DIR" \
+    --scripts "$BUILD_DIR/scripts" \
     "$BUILD_DIR/SmartEnglish-component.pkg"
 
 # Create distribution XML

@@ -364,35 +364,53 @@ footer .links a:hover { color: var(--text); }
 <section class="install" id="install">
   <div class="container">
     <div class="section-label">Installation</div>
-    <div class="section-title">Up and running in 30 seconds.</div>
-    <div class="section-desc">Download, install, start typing.</div>
+    <div class="section-title">Up and running in 2 minutes.</div>
+    <div class="section-desc">Follow these steps carefully. macOS has strict security settings for third-party input methods.</div>
     <div class="steps">
       <div class="step">
         <div class="step-num">1</div>
         <div class="step-content">
-          <h3>Download the installer</h3>
-          <p>Click the download button above to get <code>SmartEnglish.pkg</code>.</p>
+          <h3>Allow apps from anywhere</h3>
+          <p>macOS blocks unsigned apps by default. Open <strong>Terminal</strong> and run:</p>
+          <p><code>sudo spctl --master-disable</code></p>
+          <p>Then go to <strong>System Settings → Privacy &amp; Security</strong>, find <strong>"Allow apps downloaded from"</strong> and select <strong>Anywhere</strong>. You can change this back after installation.</p>
         </div>
       </div>
       <div class="step">
         <div class="step-num">2</div>
         <div class="step-content">
-          <h3>Double-click to install</h3>
-          <p>Open the <code>.pkg</code> file and follow the installer prompts. It handles everything &mdash; no security warnings, no Terminal commands needed.</p>
+          <h3>Download the installer</h3>
+          <p>Click the <strong>Download .pkg</strong> button above to get <code>SmartEnglish.pkg</code>.</p>
         </div>
       </div>
       <div class="step">
         <div class="step-num">3</div>
         <div class="step-content">
-          <h3>Add input source</h3>
-          <p>Go to <strong>System Settings → Keyboard → Input Sources</strong>, click <strong>+</strong>, select <strong>English → SmartEnglish</strong>.</p>
+          <h3>Run the installer</h3>
+          <p>Double-click <code>SmartEnglish.pkg</code> and follow the prompts. The installer automatically copies the app to <code>~/Library/Input Methods/</code> and removes quarantine flags. No Terminal commands needed.</p>
         </div>
       </div>
       <div class="step">
         <div class="step-num">4</div>
         <div class="step-content">
-          <h3>Start typing</h3>
-          <p>Press <code>Ctrl+Space</code> to switch to SmartEnglish. Type a few letters and pick from the suggestions.</p>
+          <h3>Add input source</h3>
+          <p>Go to <strong>System Settings → Keyboard → Input Sources</strong>, click <strong>+</strong>, find <strong>English</strong>, select <strong>SmartEnglish</strong>, click <strong>Add</strong>.</p>
+          <p><em>If SmartEnglish doesn't appear in the list, restart your Mac and try again.</em></p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">5</div>
+        <div class="step-content">
+          <h3>Restart your Mac (if needed)</h3>
+          <p>After adding the input source, you <strong>may need to restart</strong> for it to appear in the menu bar. This is a macOS limitation &mdash; the system caches input sources and a reboot forces a refresh.</p>
+          <p>After restart, click the input method icon in the menu bar (or press <code>Ctrl+Space</code>) to switch to SmartEnglish.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">6</div>
+        <div class="step-content">
+          <h3>Start typing!</h3>
+          <p>Type a few letters in any app &mdash; a candidate window will appear. Press <code>1</code>-<code>9</code> to pick a word, <code>Space</code> to accept the top pick, <code>Enter</code> to commit raw text.</p>
         </div>
       </div>
     </div>
@@ -408,25 +426,44 @@ footer .links a:hover { color: var(--text); }
     <div class="features-grid">
       <div class="feature-card">
         <div class="feature-icon">&#128683;</div>
-        <h3>输入法显示为灰色</h3>
-        <p>添加输入源后如果显示灰色无法使用：<br>
-        1. 完全退出系统设置<br>
-        2. 重新打开系统设置 → 键盘 → 输入源<br>
-        3. 如果仍不行，重新登录或重启电脑</p>
+        <h3>安装时提示"无法打开"</h3>
+        <p>macOS 会阻止未签名应用。解决方法：<br>
+        1. 打开终端，运行 <code>sudo spctl --master-disable</code><br>
+        2. 系统设置 → 隐私与安全性 → 选择 <strong>"任何来源"</strong><br>
+        3. 重新双击 <code>.pkg</code> 安装<br>
+        <em>安装完成后可恢复安全设置</em></p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">&#128260;</div>
+        <h3>输入法列表里找不到 SmartEnglish</h3>
+        <p>安装后在系统设置的输入源列表中看不到：<br>
+        1. 确认已运行 <code>.pkg</code> 安装器（不是只下载了）<br>
+        2. 检查 <code>~/Library/Input Methods/</code> 目录是否有 <code>SmartEnglish.app</code><br>
+        3. <strong>重启电脑</strong>，然后重新添加输入源<br>
+        <em>macOS 缓存输入源列表，重启是最可靠的解决方法</em></p>
       </div>
       <div class="feature-card">
         <div class="feature-icon">&#9000;</div>
+        <h3>输入法显示为灰色 / 无法使用</h3>
+        <p>添加输入源后如果显示灰色：<br>
+        1. 完全退出系统设置<br>
+        2. 重新打开系统设置 → 键盘 → 输入源<br>
+        3. 如果仍不行，<strong>重启电脑</strong><br>
+        4. 重启后点击菜单栏输入法图标，选择 SmartEnglish</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">&#128274;</div>
         <h3>如何切换输入法</h3>
         <p>切换到 SmartEnglish：<br>
         • 按 <code>Control + 空格</code> 切换输入源<br>
         • 或按 <code>地球键</code> (Globe key) 循环切换<br>
         • 或点击菜单栏输入法图标选择<br>
-        <em>注意：Caps Lock 在英文模式下是大写，不是切换输入法</em></p>
+        <em>注意：Caps Lock 只在英文和 ABC 之间切换，不包含自定义输入法</em></p>
       </div>
       <div class="feature-card">
         <div class="feature-icon">&#128196;</div>
         <h3>候选词窗口不出现</h3>
-        <p>确保已切换到 SmartEnglish 输入法（菜单栏显示 SE 图标）。输入英文字母后会自动显示候选词。按 <code>1-9</code> 选择，<code>空格</code> 确认第一个，<code>回车</code> 直接上屏原始字母。</p>
+        <p>确保已切换到 SmartEnglish（菜单栏显示 SE 图标）。输入英文字母后会自动显示候选词。按 <code>1-9</code> 选择，<code>空格</code> 确认第一个，<code>回车</code> 直接上屏原始字母。</p>
       </div>
       <div class="feature-card">
         <div class="feature-icon">&#128260;</div>
