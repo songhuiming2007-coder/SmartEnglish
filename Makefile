@@ -1,4 +1,4 @@
-.PHONY: generate build install dev clean uninstall log wordlist
+.PHONY: generate build install dev clean uninstall log wordlist pkg
 
 PROJECT = SmartEnglish
 SCHEME = SmartEnglish
@@ -53,3 +53,7 @@ uninstall:
 
 log:
 	log stream --predicate 'process == "SmartEnglishExtension"' --level debug
+
+pkg: build
+	@echo "Building installer package..."
+	@bash scripts/build-pkg.sh

@@ -365,27 +365,34 @@ footer .links a:hover { color: var(--text); }
   <div class="container">
     <div class="section-label">Installation</div>
     <div class="section-title">Up and running in 30 seconds.</div>
-    <div class="section-desc">Download, double-click install, start typing.</div>
+    <div class="section-desc">Download, install, start typing.</div>
     <div class="steps">
       <div class="step">
         <div class="step-num">1</div>
         <div class="step-content">
-          <h3>Download & unzip</h3>
-          <p>Grab the <code>.zip</code> from the download section below. Double-click to unzip.</p>
+          <h3>Download the installer</h3>
+          <p>Click the download button above to get <code>SmartEnglish.pkg</code>.</p>
         </div>
       </div>
       <div class="step">
         <div class="step-num">2</div>
         <div class="step-content">
-          <h3>Double-click Install</h3>
-          <p>Open the unzipped folder and double-click <code>Install.command</code>. Enter your password when prompted &mdash; the installer handles everything automatically.</p>
+          <h3>Double-click to install</h3>
+          <p>Open the <code>.pkg</code> file and follow the installer prompts. It handles everything &mdash; no security warnings, no Terminal commands needed.</p>
         </div>
       </div>
       <div class="step">
         <div class="step-num">3</div>
         <div class="step-content">
+          <h3>Add input source</h3>
+          <p>Go to <strong>System Settings → Keyboard → Input Sources</strong>, click <strong>+</strong>, select <strong>English → SmartEnglish</strong>.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-content">
           <h3>Start typing</h3>
-          <p>Switch to SmartEnglish with <code>Ctrl+Space</code> or the input icon in the menu bar. Type a few letters and pick from the suggestions.</p>
+          <p>Press <code>Ctrl+Space</code> to switch to SmartEnglish. Type a few letters and pick from the suggestions.</p>
         </div>
       </div>
     </div>
@@ -399,13 +406,6 @@ footer .links a:hover { color: var(--text); }
     <div class="section-title">遇到问题？</div>
     <div class="section-desc">macOS 对第三方输入法限制较多，以下是常见问题和解决方法。</div>
     <div class="features-grid">
-      <div class="feature-card">
-        <div class="feature-icon">&#128274;</div>
-        <h3>Install.command 无法打开</h3>
-        <p>macOS 可能阻止从互联网下载的脚本。解决方法：<br>
-        右键点击 <code>Install.command</code> → 选择「打开」→ 在弹窗中确认「打开」<br>
-        <em style="color:var(--text-muted); font-size:13px;">安装脚本会自动移除安全限制，无需手动设置系统偏好</em></p>
-      </div>
       <div class="feature-card">
         <div class="feature-icon">&#128683;</div>
         <h3>输入法显示为灰色</h3>
@@ -431,7 +431,7 @@ footer .links a:hover { color: var(--text); }
       <div class="feature-card">
         <div class="feature-icon">&#128260;</div>
         <h3>更新或卸载</h3>
-        <p><strong>更新</strong>：下载新版，双击 <code>Install.command</code> 即可覆盖安装<br>
+        <p><strong>更新</strong>：下载新版 <code>.pkg</code>，双击安装即可覆盖<br>
         <strong>卸载</strong>：<br>
         1. 系统设置 → 键盘 → 输入源 → 移除 SmartEnglish<br>
         2. 删除 <code>~/Library/Input Methods/SmartEnglish.app</code></p>
@@ -455,18 +455,18 @@ footer .links a:hover { color: var(--text); }
       <div class="download-meta">
         <span>macOS 13+</span>
         <span>&bull;</span>
-        <span>~500 KB</span>
+        <span>~1 MB</span>
         <span>&bull;</span>
         <span>v0.2.0</span>
       </div>
       <div class="download-buttons">
-        <a href="https://github.com/songhuiming2007-coder/SmartEnglish/releases/latest/download/SmartEnglish.zip" class="btn btn-primary">
+        <a href="https://github.com/songhuiming2007-coder/SmartEnglish/releases/latest/download/SmartEnglish.pkg" class="btn btn-primary">
           <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 1v10M4 7l4 4 4-4M2 13h12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          Download .zip
+          Download .pkg
         </a>
         <a href="https://github.com/songhuiming2007-coder/SmartEnglish/releases" target="_blank" class="btn btn-secondary">All releases</a>
       </div>
-      <p class="download-note">Unzip and double-click <code>Install.command</code> to install.<br>The installer handles everything &mdash; just enter your password.</p>
+      <p class="download-note">Double-click the <code>.pkg</code> file to install &mdash; no security warnings, no extra steps.</p>
     </div>
   </div>
 </section>

@@ -2,11 +2,20 @@
 
 macOS 英文预测输入法。输入英文字母时实时弹出候选词窗口，与系统中文输入法体验一致。
 
-## 安装
+## 下载安装
+
+1. 下载 [SmartEnglish.pkg](https://github.com/songhuiming2007-coder/SmartEnglish/releases/latest/download/SmartEnglish.pkg)
+2. 双击打开，按向导完成安装
+3. 系统设置 → 键盘 → 输入源 → 点击 + → English → SmartEnglish
+4. 按 `Ctrl+Space` 切换到 SmartEnglish 即可使用
+
+**更新**：下载新版 .pkg，双击安装即可覆盖。
+
+## 开发
 
 ```bash
-# 构建 + 安装
-make dev
+make dev         # 构建 + 安装（开发者模式）
+make pkg         # 构建 .pkg 安装器
 ```
 
 首次安装后：

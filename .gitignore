@@ -12,3 +12,4 @@ DerivedData/
 # Build artifacts
 *.app
 *.zip
+dist/
