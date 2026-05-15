@@ -3,13 +3,13 @@ import Cocoa
 class CandidateView: NSView {
     private var candidates: [String] = []
     private var itemRects: [NSRect] = []
-    private var hoveredIndex: Int = -1
+    private var selectedIndex: Int = 0
     var onClicked: ((Int) -> Void)?
 
     private let font = NSFont.systemFont(ofSize: 14)
-    private let indexFont = NSFont.monospacedDigitSystemFont(ofSize: 12, weight: .medium)
-    private let hPadding: CGFloat = 10
-    private let itemSpacing: CGFloat = 14
+    private let indexFont = NSFont.monospacedDigitSystemFont(ofSize: 11, weight: .regular)
+    private let hPadding: CGFloat = 12
+    private let itemSpacing: CGFloat = 20
     private let vPadding: CGFloat = 5
 
     override var acceptsFirstResponder: Bool { true }
@@ -31,76 +31,87 @@ class CandidateView: NSView {
 
     func update(candidates: [String]) {
         self.candidates = candidates
-        self.hoveredIndex = -1
+        self.selectedIndex = 0
         needsDisplay = true
     }
 
     func idealSize() -> NSSize {
         var totalWidth: CGFloat = hPadding
         for (i, word) in candidates.enumerated() {
-            let label = "\(i + 1). \(word)"
-            let labelSize = (label as NSString).size(withAttributes: [.font: font])
-            totalWidth += labelSize.width + itemSpacing
+            let indexStr = "\(i + 1)"
+            let indexSize = (indexStr as NSString).size(withAttributes: [.font: indexFont])
+            let wordSize = (word as NSString).size(withAttributes: [.font: font])
+            totalWidth += indexSize.width + 4 + wordSize.width + itemSpacing
         }
-        totalWidth += hPadding
-        return NSSize(width: max(totalWidth, 80), height: 28)
+        // Arrow space
+        totalWidth += 16 + hPadding
+        return NSSize(width: max(totalWidth, 80), height: 32)
     }
 
     override func draw(_ dirtyRect: NSRect) {
-        let bgPath = NSBezierPath(roundedRect: bounds, xRadius: 6, yRadius: 6)
-        NSColor.windowBackgroundColor.withAlphaComponent(0.95).setFill()
+        // Background
+        let bgPath = NSBezierPath(roundedRect: bounds, xRadius: 10, yRadius: 10)
+        NSColor.windowBackgroundColor.setFill()
         bgPath.fill()
-        NSColor.separatorColor.setStroke()
-        bgPath.lineWidth = 0.5
-        bgPath.stroke()
 
         var x: CGFloat = hPadding
         let y: CGFloat = vPadding
         itemRects = []
 
         for (i, word) in candidates.enumerated() {
-            let indexStr = "\(i + 1)."
+            let indexStr = "\(i + 1)"
             let indexAttrs: [NSAttributedString.Key: Any] = [
                 .font: indexFont,
                 .foregroundColor: NSColor.secondaryLabelColor
             ]
+
+            let isHighlighted = (i == selectedIndex)
             let wordAttrs: [NSAttributedString.Key: Any] = [
                 .font: font,
-                .foregroundColor: (i == hoveredIndex) ? NSColor.selectedTextColor : NSColor.labelColor
+                .foregroundColor: isHighlighted ? NSColor.white : NSColor.labelColor
             ]
 
             let indexSize = (indexStr as NSString).size(withAttributes: indexAttrs)
             let wordSize = (word as NSString).size(withAttributes: wordAttrs)
-            let itemWidth = indexSize.width + 3 + wordSize.width
+            let itemWidth = indexSize.width + 4 + wordSize.width
 
             let itemRect = NSRect(x: x - 3, y: 0, width: itemWidth + itemSpacing, height: bounds.height)
             itemRects.append(itemRect)
 
-            if i == hoveredIndex {
-                let highlightPath = NSBezierPath(roundedRect: itemRect.insetBy(dx: 1, dy: 2), xRadius: 4, yRadius: 4)
-                NSColor.selectedContentBackgroundColor.withAlphaComponent(0.3).setFill()
+            if isHighlighted {
+                let highlightRect = NSRect(x: x - 4, y: 1, width: itemWidth + 4, height: bounds.height - 2)
+                let highlightPath = NSBezierPath(roundedRect: highlightRect, xRadius: 6, yRadius: 6)
+                NSColor.selectedContentBackgroundColor.setFill()
                 highlightPath.fill()
             }
 
             (indexStr as NSString).draw(at: NSPoint(x: x, y: y), withAttributes: indexAttrs)
-            x += indexSize.width + 3
+            x += indexSize.width + 4
             (word as NSString).draw(at: NSPoint(x: x, y: y), withAttributes: wordAttrs)
             x += wordSize.width + itemSpacing
         }
+
+        // Arrow "∨"
+        let arrowAttrs: [NSAttributedString.Key: Any] = [
+            .font: NSFont.systemFont(ofSize: 14),
+            .foregroundColor: NSColor.secondaryLabelColor
+        ]
+        let arrowStr = "∨"
+        let arrowSize = (arrowStr as NSString).size(withAttributes: arrowAttrs)
+        (arrowStr as NSString).draw(at: NSPoint(x: bounds.width - hPadding - arrowSize.width, y: y), withAttributes: arrowAttrs)
     }
 
     override func mouseMoved(with event: NSEvent) {
         let point = convert(event.locationInWindow, from: nil)
-        let newIndex = itemRects.firstIndex(where: { $0.contains(point) }) ?? -1
-        if newIndex != hoveredIndex {
-            hoveredIndex = newIndex
+        let newIndex = itemRects.firstIndex(where: { $0.contains(point) }) ?? selectedIndex
+        if newIndex != selectedIndex {
+            selectedIndex = newIndex
             needsDisplay = true
         }
     }
 
     override func mouseExited(with event: NSEvent) {
-        hoveredIndex = -1
-        needsDisplay = true
+        // Keep selection on exit
     }
 
     override func mouseDown(with event: NSEvent) {

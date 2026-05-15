@@ -23,6 +23,7 @@ class CandidateWindow {
         panel.isOpaque = false
         panel.backgroundColor = .clear
         panel.contentView = candidateView
+        panel.isMovableByWindowBackground = false
 
         candidateView.onClicked = { [weak self] index in
             self?.onCandidateSelected?(index)
