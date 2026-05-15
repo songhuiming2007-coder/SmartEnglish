@@ -26,6 +26,13 @@
 		<dict>
 			<key>com.songhuiming.inputmethod.SmartEnglish</key>
 			<dict>
+				<key>tsInputModeLocalizedNamesKey</key>
+				<dict>
+					<key>en</key>
+					<string>SmartEnglish</string>
+					<key>zh-Hans</key>
+					<string>SmartEnglish</string>
+				</dict>
 				<key>TISIconLabels</key>
 				<dict>
 					<key>Primary</key>
