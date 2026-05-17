@@ -5,7 +5,7 @@ set -e
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 PROJECT_DIR="$(dirname "$SCRIPT_DIR")"
 APP_NAME="SmartEnglish"
-VERSION="0.2.1"
+VERSION="0.3.0"
 BUILD_DIR="$PROJECT_DIR/build/pkg"
 DIST_DIR="$PROJECT_DIR/dist"
 

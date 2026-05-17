@@ -6,12 +6,22 @@ class WordDictionary {
     private var entries: [(word: String, freq: Int)] = []
     private var userFreq: [String: Int] = [:]
     private var properNouns: [String: String] = [:]  // lowercase -> standard form
+    private var contractions: [String: String] = [:]  // lowercase -> standard form with apostrophe
+    /// 有歧义的缩写词（本身也是常用词），不强制放首位
+    private let ambiguousContractions: Set<String> = ["id", "well", "were", "cant", "wont"]
     private let userDefaultsKey = "SmartEnglish_UserFreq"
+    private var saveTimer: DispatchWorkItem?
+    /// bigram: [prev_word: [next_word: freq]]
+    private var bigrams: [String: [String: Int]] = [:]
+    /// 上一个上屏的词，用于 bigram 查询
+    private var lastWord: String = ""
 
     private init() {
         loadBuiltIn()
         loadUserFreq()
         loadProperNouns()
+        loadContractions()
+        loadBigrams()
     }
 
     // MARK: - 加载词库
@@ -56,7 +66,14 @@ class WordDictionary {
             }
 
             let userBoost = Double(userFreq[entry.word] ?? 0) * 5000.0
-            let score = Double(entry.freq) + userBoost
+            var score = Double(entry.freq) + userBoost
+
+            // bigram 加权：如果前一个词已知，给匹配的下一个词强力 boost
+            if !lastWord.isEmpty, let nextWords = bigrams[lastWord],
+               let bigramFreq = nextWords[entry.word] {
+                score += Double(bigramFreq) * 100.0
+            }
+
             matches.append((entry.word, score))
 
             if matches.count >= limit * 5 { break }
@@ -70,6 +87,22 @@ class WordDictionary {
             if result.count > limit { result.removeLast() }
         }
 
+        // 缩写补全：输入完全匹配 contraction key 时处理
+        if let contraction = contractions[prefix.lowercased()] {
+            if ambiguousContractions.contains(prefix.lowercased()) {
+                // 歧义词：加入候选但不强制首位
+                if !result.contains(contraction) {
+                    result.append(contraction)
+                    if result.count > limit { result.removeFirst() }
+                }
+            } else {
+                // 无歧义：放首位
+                result.removeAll { $0 == contraction }
+                result.insert(contraction, at: 0)
+                if result.count > limit { result.removeLast() }
+            }
+        }
+
         return result
     }
 
@@ -77,15 +110,77 @@ class WordDictionary {
 
     func recordSelection(word: String) {
         userFreq[word, default: 0] += 1
-        saveUserFreq()
+        debounceSave()
     }
 
     private func loadUserFreq() {
         userFreq = UserDefaults.standard.dictionary(forKey: userDefaultsKey) as? [String: Int] ?? [:]
     }
 
-    private func saveUserFreq() {
+    private func debounceSave() {
+        saveTimer?.cancel()
+        let work = DispatchWorkItem { [weak self] in
+            guard let self else { return }
+            UserDefaults.standard.set(self.userFreq, forKey: self.userDefaultsKey)
+        }
+        saveTimer = work
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2, execute: work)
+    }
+
+    /// 立即写入（退出时调用）
+    func flush() {
+        saveTimer?.cancel()
+        saveTimer = nil
         UserDefaults.standard.set(userFreq, forKey: userDefaultsKey)
+    }
+
+    // MARK: - Bigram 上下文预测
+
+    private func loadBigrams() {
+        guard let url = Bundle.main.url(forResource: "bigrams", withExtension: "txt") else {
+            NSLog("SmartEnglish: bigrams.txt not found in bundle (optional)")
+            return
+        }
+        guard let content = try? String(contentsOf: url, encoding: .utf8) else {
+            NSLog("SmartEnglish ERROR: Failed to read bigrams.txt")
+            return
+        }
+        for line in content.components(separatedBy: .newlines) {
+            let parts = line.split(separator: "\t", maxSplits: 1)
+            guard parts.count == 2, let freq = Int(parts[1]) else { continue }
+            let words = parts[0].split(separator: " ", maxSplits: 1)
+            guard words.count == 2 else { continue }
+            let w1 = String(words[0])
+            let w2 = String(words[1])
+            bigrams[w1, default: [:]][w2] = freq
+        }
+        NSLog("SmartEnglish: Loaded bigrams for \(bigrams.count) prev-words")
+    }
+
+    /// 设置上下文词（用户上屏完一个词后调用）
+    func setLastWord(_ word: String) {
+        lastWord = word.lowercased().trimmingCharacters(in: .whitespaces)
+    }
+
+    // MARK: - 缩写补全
+
+    private func loadContractions() {
+        guard let url = Bundle.main.url(forResource: "contractions", withExtension: "txt") else {
+            NSLog("SmartEnglish: contractions.txt not found in bundle (optional)")
+            return
+        }
+        guard let content = try? String(contentsOf: url, encoding: .utf8) else {
+            NSLog("SmartEnglish ERROR: Failed to read contractions.txt")
+            return
+        }
+        for line in content.components(separatedBy: .newlines) {
+            let parts = line.split(separator: "|", maxSplits: 1)
+            guard parts.count == 2 else { continue }
+            let key = String(parts[0]).lowercased()
+            let value = String(parts[1])
+            contractions[key] = value
+        }
+        NSLog("SmartEnglish: Loaded \(contractions.count) contractions")
     }
 
     // MARK: - 专有名词

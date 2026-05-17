@@ -9,18 +9,56 @@ class SmartEnglishInputController: IMKInputController {
     private var candidates: [String] = []
     private let dictionary = WordDictionary.shared
     private lazy var candidateWindow = CandidateWindow.shared
+    private var shouldCapitalizeNext: Bool = true
+    private var lastCommittedText: String = ""
 
     // ==================== 生命周期 ====================
 
     override func activateServer(_ sender: Any!) {
         super.activateServer(sender)
+        shouldCapitalizeNext = true
         reset()
     }
 
     override func deactivateServer(_ sender: Any!) {
         commitComposing(sender as? IMKTextInput)
         candidateWindow.hide()
+        dictionary.flush()
         super.deactivateServer(sender)
+    }
+
+    // ==================== 不打扰模式 ====================
+
+    private static let blockedApps: Set<String> = [
+        "com.apple.Terminal",
+        "com.googlecode.iterm2",
+        "com.github.wez.wezterm",
+        "com.mitchellh.ghostty",
+        "net.kovidgoyal.kitty",
+        "com.1password.1password",
+        "com.agilebits.onepassword7",
+        "com.lastpass.LastPass",
+        "com.bitwarden.desktop",
+    ]
+
+    private func shouldDisableInContext(client: IMKTextInput) -> Bool {
+        // 1. 检查输入字段属性（部分应用会标记密码字段）
+        var rect = NSRect.zero
+        let attrs = client.attributes(forCharacterIndex: 0, lineHeightRectangle: &rect)
+        let secureKey = NSAttributedString.Key(rawValue: "NSTextInputSecureField")
+        if let isSecure = attrs?[secureKey] as? Bool, isSecure {
+            NSLog("SmartEnglish: Disabled — secure field detected")
+            return true
+        }
+
+        // 2. 检查特定应用（终端、密码管理器等）
+        let bundleId = client.bundleIdentifier() ?? ""
+        if SmartEnglishInputController.blockedApps.contains(bundleId) {
+            NSLog("SmartEnglish: Disabled — blocked app: %@", bundleId)
+            return true
+        }
+
+        return false
     }
 
     // ==================== 按键处理 ====================
@@ -30,6 +68,14 @@ class SmartEnglishInputController: IMKInputController {
         guard let client = sender as? IMKTextInput else { return false }
 
         NSLog("SmartEnglish DEBUG: handle keyCode=%d chars=%@", event.keyCode, event.characters ?? "nil")
+
+        // 不打扰模式：密码框/终端等场景，所有按键透传
+        if shouldDisableInContext(client: client) {
+            if !composingText.isEmpty {
+                commitComposing(client)
+            }
+            return false
+        }
 
         let keyCode = event.keyCode
         let chars = event.characters ?? ""
@@ -43,14 +89,6 @@ class SmartEnglishInputController: IMKInputController {
             return false
         }
 
-        // 数字键 1-9：选择对应候选词（必须在字母键之前，否则数字会被当作字母追加）
-        if let char = chars.first, char >= "1" && char <= "9" && !candidates.isEmpty && !composingText.isEmpty {
-            let index = Int(String(char))! - 1
-            if index < candidates.count {
-                selectCandidate(at: index, client: client)
-                return true
-            }
-        }
 
         // 字母键 a-z / A-Z
         if let char = chars.first, char.isLetter && char.isASCII {
@@ -58,6 +96,25 @@ class SmartEnglishInputController: IMKInputController {
             updateMarkedText(client)
             updateCandidates(client)
             return true
+        }
+
+        // 数字键 0-9：composing 状态下特殊处理
+        if let char = chars.first, char.isNumber {
+            if !composingText.isEmpty {
+                // 有候选词且按 1-9：选词
+                if !candidates.isEmpty && char >= "1" && char <= "9" {
+                    let index = Int(String(char))! - 1
+                    if index < candidates.count {
+                        selectCandidate(at: index, client: client)
+                        return true
+                    }
+                }
+                // 没有候选词或按 0：先上屏当前 composing，再让数字透传
+                commitComposing(client)
+                return false
+            }
+            // 非 composing 状态：数字透传
+            return false
         }
 
         // Backspace
@@ -119,6 +176,10 @@ class SmartEnglishInputController: IMKInputController {
         if !composingText.isEmpty {
             commitComposing(client)
         }
+        // 句末标点后应大写下一个词
+        if let ch = chars.first, [".", "?", "!"].contains(String(ch)) {
+            shouldCapitalizeNext = true
+        }
         return false
     }
 
@@ -153,12 +214,6 @@ class SmartEnglishInputController: IMKInputController {
         }
     }
 
-    private func isAtSentenceStart(_ client: IMKTextInput) -> Bool {
-        // TODO: client.string(from:actualRange:) 在部分应用中会 crash（空指针），
-        // 暂时禁用句首检测，后续用 NSTextInputClient 协议方法重新实现
-        return false
-    }
-
     private func applyCasing(to word: String, composingText: String, client: IMKTextInput) -> String {
         let pattern = detectCasingPattern(composingText)
 
@@ -170,10 +225,11 @@ class SmartEnglishInputController: IMKInputController {
             return word.prefix(1).uppercased() + word.dropFirst()
 
         case .allLowercase:
+            // 优先级：专有名词 > 句首大写 > 原样
             if let properForm = dictionary.properNounForm(for: word) {
                 return properForm
             }
-            if isAtSentenceStart(client) {
+            if shouldCapitalizeNext {
                 return word.prefix(1).uppercased() + word.dropFirst()
             }
             return word
@@ -207,10 +263,20 @@ class SmartEnglishInputController: IMKInputController {
         if candidates.isEmpty {
             candidateWindow.hide()
         } else {
+            // 句首大写：对候选词应用大写（不修改原始 candidates，只影响显示）
+            var displayCandidates = candidates
+            if shouldCapitalizeNext {
+                displayCandidates = applyCapitalization(to: candidates)
+            }
             var cursorRect = NSRect.zero
             let _ = client.attributes(forCharacterIndex: 0, lineHeightRectangle: &cursorRect)
-            candidateWindow.show(candidates: candidates, cursorRect: cursorRect)
+            candidateWindow.show(candidates: displayCandidates, cursorRect: cursorRect)
         }
+    }
+
+    /// 对候选词列表首字母大写
+    private func applyCapitalization(to words: [String]) -> [String] {
+        return words.map { $0.prefix(1).uppercased() + $0.dropFirst() }
     }
 
     private func selectCandidate(at index: Int, client: IMKTextInput) {
@@ -224,6 +290,8 @@ class SmartEnglishInputController: IMKInputController {
         )
 
         dictionary.recordSelection(word: rawWord)
+        dictionary.setLastWord(rawWord)
+        updateCapitalizationState(committedText: finalWord + " ")
         reset()
         candidateWindow.hide()
     }
@@ -234,6 +302,7 @@ class SmartEnglishInputController: IMKInputController {
             composingText,
             replacementRange: NSRange(location: NSNotFound, length: NSNotFound)
         )
+        updateCapitalizationState(committedText: composingText)
         reset()
         candidateWindow.hide()
     }
@@ -246,6 +315,25 @@ class SmartEnglishInputController: IMKInputController {
         )
         reset()
         candidateWindow.hide()
+    }
+
+    /// 上屏后更新句首大写状态
+    private func updateCapitalizationState(committedText: String) {
+        lastCommittedText = committedText
+        let trimmed = committedText.trimmingCharacters(in: .whitespaces)
+
+        // 检查是否以句号/问号/感叹号结尾
+        if let last = trimmed.last, [".", "?", "!"].contains(String(last)) {
+            shouldCapitalizeNext = true
+        } else if committedText.hasSuffix(". ") ||
+                  committedText.hasSuffix("? ") ||
+                  committedText.hasSuffix("! ") {
+            shouldCapitalizeNext = true
+        } else if committedText.contains("\n") {
+            shouldCapitalizeNext = true
+        } else {
+            shouldCapitalizeNext = false
+        }
     }
 
     private func reset() {
