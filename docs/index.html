@@ -277,6 +277,7 @@ body.lang-zh .en { display: none; }
       <a href="#features" data-en="Features" data-zh="功能">Features</a>
       <a href="#install" data-en="Install" data-zh="安装">Install</a>
       <a href="#update" data-en="Update" data-zh="更新">Update</a>
+      <a href="#changelog" data-en="Changelog" data-zh="版本历史">Changelog</a>
       <a href="#troubleshooting" data-en="Troubleshooting" data-zh="问题排查">Troubleshooting</a>
       <a href="#download" data-en="Download" data-zh="下载">Download</a>
       <a href="https://github.com/songhuiming2007-coder/SmartEnglish" target="_blank">GitHub</a>
@@ -472,6 +473,37 @@ body.lang-zh .en { display: none; }
           <h3 data-en="Restart affected apps" data-zh="重启已打开的应用">Restart affected apps</h3>
           <p><span class="en">Apps that were open during the update need to be restarted to use the new version. Or just restart your Mac.</span><span class="zh">更新时已打开的应用需要重启才能使用新版本。或者直接重启 Mac。</span></p>
         </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CHANGELOG -->
+<section class="features" id="changelog">
+  <div class="container">
+    <div class="section-label" data-en="Changelog" data-zh="版本历史">Changelog</div>
+    <div class="section-title" data-en="What's new in each version" data-zh="每个版本更新了什么">What's new in each version</div>
+    <div class="section-desc"><span class="en">SmartEnglish is actively developed. Here's a summary of every release.</span><span class="zh">SmartEnglish 持续迭代中，以下是每个版本的更新摘要。</span></div>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">&#128230;</div>
+        <h3>v0.4.0</h3>
+        <p><span class="en"><strong>SQLite storage</strong> — user word frequency migrated from UserDefaults to SQLite, zero dependencies.<br><br><strong>User bigram learning</strong> — records word-to-word transitions (e.g., "thank" → "you"), ×50000 weight boost.<br><br><strong>Custom snippets</strong> — define shortcuts that expand to full text via a simple JSON file.</span><span class="zh"><strong>SQLite 存储</strong> — 用户词频从 UserDefaults 迁移到 SQLite，零第三方依赖。<br><br><strong>用户级 Bigram 学习</strong> — 记录词与词的搭配关系（如 "thank" → "you"），×50000 权重加持。<br><br><strong>自定义片语</strong> — 通过 JSON 文件定义简写 → 全文展开。</span></p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">&#128683;</div>
+        <h3>v0.3.0</h3>
+        <p><span class="en"><strong>DND mode</strong> — auto-disables in terminals and password managers.<br><br><strong>Abbreviation completion</strong> — "dont" → "don't", "cant" → "can't" (51 contractions).<br><br><strong>Mixed input</strong> — supports "h2o", "3d", "v2" and other alphanumeric words.<br><br><strong>Auto-capitalize</strong> — sentence-start capitalization after period, question mark, exclamation mark.<br><br><strong>Bigram prediction</strong> — predicts next word based on the previous one.</span><span class="zh"><strong>不打扰模式</strong> — 终端、密码管理器中自动禁用。<br><br><strong>缩写补全</strong> — "dont" → "don't"，"cant" → "can't"（51 组缩写）。<br><br><strong>数字混合输入</strong> — 支持 "h2o"、"3d"、"v2" 等字母数字混合词。<br><br><strong>句首大写</strong> — 句号/问号/感叹号后自动大写下一个候选词。<br><br><strong>Bigram 预测</strong> — 基于前一个词预测下一个词。</span></p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">&#128296;</div>
+        <h3>v0.2.1</h3>
+        <p><span class="en"><strong>Bug fix</strong> — fixed menu bar display name and icon blurriness.</span><span class="zh"><strong>修复</strong> — 修复菜单栏显示名称和图标模糊问题。</span></p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">&#127775;</div>
+        <h3>v0.2.0</h3>
+        <p><span class="en"><strong>First public release</strong> — 50,000-word frequency dictionary, 1,146 proper nouns, smart casing, custom NSPanel candidate window, keyboard-first workflow.</span><span class="zh"><strong>首个公开版本</strong> — 50,000 词频词典，1,146 专有名词，智能大小写，自定义候选窗口，纯键盘操作。</span></p>
       </div>
     </div>
   </div>
