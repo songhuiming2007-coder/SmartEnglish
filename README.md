@@ -83,12 +83,42 @@ make wordlist    # 重新生成词库
 ## 词库
 
 基于 Peter Norvig 的 Google Trillion Word Corpus 词频数据，约 50,000 词。
-用户选词会被记录，常用词会自动提升排序。
+用户选词会被记录，常用词会自动提升排序。系统还会学习你的个人词组搭配（比如你经常打 "machine learning"），下次输入时会优先推荐。
 
 重新生成词库：
 ```bash
 make wordlist
 ```
+
+## 自定义片语
+
+你可以定义自己的简写 → 完整文本映射，输入法会自动展开。比如：
+
+| 简写 | 展开 |
+|------|------|
+| `addr` | `1234 University Ave, Berkeley, CA 94704` |
+| `sig` | `Best,\nSong Huiming` |
+| `em` | `your@email.com` |
+| `phone` | `+86 123 4567 8910` |
+
+### 设置方法
+
+1. 打开 Finder，按 `Cmd+Shift+G`，输入 `~/Library/Application Support/SmartEnglish/`
+2. 用任意编辑器（TextEdit、VS Code 等）打开 `snippets.json`
+3. 按以下格式添加你的片语：
+
+```json
+{
+  "addr": "你的完整地址",
+  "sig": "你的邮件签名",
+  "em": "你的邮箱",
+  "phone": "你的电话"
+}
+```
+
+4. 保存文件后，切换输入法刷新即可生效
+
+> 片语在候选词中拥有最高优先级，输入完全匹配的简写时会直接出现在第一位。
 
 ## 技术栈
 

@@ -266,7 +266,7 @@ class SmartEnglishInputController: IMKInputController {
             // 句首大写：对候选词应用大写（不修改原始 candidates，只影响显示）
             var displayCandidates = candidates
             if shouldCapitalizeNext {
-                displayCandidates = applyCapitalization(to: candidates)
+                displayCandidates = applyCapitalization(to: candidates, snippetAtZero: dictionary.getSnippet(for: composingText.lowercased()) != nil)
             }
             var cursorRect = NSRect.zero
             let _ = client.attributes(forCharacterIndex: 0, lineHeightRectangle: &cursorRect)
@@ -274,14 +274,31 @@ class SmartEnglishInputController: IMKInputController {
         }
     }
 
-    /// 对候选词列表首字母大写
-    private func applyCapitalization(to words: [String]) -> [String] {
-        return words.map { $0.prefix(1).uppercased() + $0.dropFirst() }
+    /// 对候选词列表首字母大写（跳过首位片语）
+    private func applyCapitalization(to words: [String], snippetAtZero: Bool = false) -> [String] {
+        return words.enumerated().map { i, word in
+            // 跳过首位的片语展开文本
+            if i == 0 && snippetAtZero { return word }
+            return word.prefix(1).uppercased() + word.dropFirst()
+        }
     }
 
     private func selectCandidate(at index: Int, client: IMKTextInput) {
         guard index < candidates.count else { return }
         let rawWord = candidates[index]
+
+        // 自定义片语：直接上屏，不走大小写转换和词频学习
+        if index == 0, let snippet = dictionary.getSnippet(for: composingText.lowercased()), snippet == rawWord {
+            client.insertText(
+                rawWord + " ",
+                replacementRange: NSRange(location: NSNotFound, length: NSNotFound)
+            )
+            updateCapitalizationState(committedText: rawWord + " ")
+            reset()
+            candidateWindow.hide()
+            return
+        }
+
         let finalWord = applyCasing(to: rawWord, composingText: composingText, client: client)
 
         client.insertText(

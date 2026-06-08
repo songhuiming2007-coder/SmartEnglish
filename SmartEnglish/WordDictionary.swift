@@ -4,21 +4,22 @@ class WordDictionary {
     static let shared = WordDictionary()
 
     private var entries: [(word: String, freq: Int)] = []
-    private var userFreq: [String: Int] = [:]
+    /// 内存缓存（启动时从 SQLite 加载一次）
+    private var userFreqCache: [String: Int] = [:]
     private var properNouns: [String: String] = [:]  // lowercase -> standard form
     private var contractions: [String: String] = [:]  // lowercase -> standard form with apostrophe
     /// 有歧义的缩写词（本身也是常用词），不强制放首位
     private let ambiguousContractions: Set<String> = ["id", "well", "were", "cant", "wont"]
-    private let userDefaultsKey = "SmartEnglish_UserFreq"
-    private var saveTimer: DispatchWorkItem?
     /// bigram: [prev_word: [next_word: freq]]
     private var bigrams: [String: [String: Int]] = [:]
     /// 上一个上屏的词，用于 bigram 查询
     private var lastWord: String = ""
+    /// 用户 bigram 缓存（避免每次 query 都查 SQLite）
+    private var lastWordBigramCache: (word: String, bigrams: [String: Int])? = nil
 
     private init() {
         loadBuiltIn()
-        loadUserFreq()
+        userFreqCache = UserDatabase.shared.loadAllUserWordFreq()
         loadProperNouns()
         loadContractions()
         loadBigrams()
@@ -54,6 +55,15 @@ class WordDictionary {
     func query(prefix: String, limit: Int = 9) -> [String] {
         guard !prefix.isEmpty else { return [] }
 
+        var result: [String] = []
+        var remainingLimit = limit
+
+        // 1. 最高优先级：自定义片语（完全匹配 shortcut 时展开）
+        if let expansion = UserDatabase.shared.getSnippet(prefix.lowercased()) {
+            result.append(expansion)
+            remainingLimit -= 1
+        }
+
         var matches: [(word: String, score: Double)] = []
         var exactMatch = false
 
@@ -65,7 +75,7 @@ class WordDictionary {
                 continue
             }
 
-            let userBoost = Double(userFreq[entry.word] ?? 0) * 5000.0
+            let userBoost = Double(userFreqCache[entry.word] ?? 0) * 5000.0
             var score = Double(entry.freq) + userBoost
 
             // bigram 加权：如果前一个词已知，给匹配的下一个词强力 boost
@@ -74,16 +84,27 @@ class WordDictionary {
                 score += Double(bigramFreq) * 100.0
             }
 
+            // 用户级 bigram 加权（权重远高于公共 bigram：×50000 vs ×100）
+            if !lastWord.isEmpty {
+                let userBigrams = getUserBigramsForCurrentContext()
+                if let userBigramFreq = userBigrams[entry.word] {
+                    score += Double(userBigramFreq) * 50000.0
+                }
+            }
+
             matches.append((entry.word, score))
 
-            if matches.count >= limit * 5 { break }
+            if matches.count >= remainingLimit * 5 { break }
         }
 
         matches.sort { $0.score > $1.score }
-        var result = Array(matches.prefix(limit).map { $0.word })
+        result.append(contentsOf: matches.prefix(remainingLimit).map { $0.word })
+
+        // 片语存在时，插入位置为 1（保持片语在首位）；否则为 0
+        let insertPos = min(remainingLimit < limit ? 1 : 0, result.count)
 
         if exactMatch {
-            result.insert(prefix, at: 0)
+            result.insert(prefix, at: insertPos)
             if result.count > limit { result.removeLast() }
         }
 
@@ -96,9 +117,9 @@ class WordDictionary {
                     if result.count > limit { result.removeFirst() }
                 }
             } else {
-                // 无歧义：放首位
+                // 无歧义：放首位（但片语之后）
                 result.removeAll { $0 == contraction }
-                result.insert(contraction, at: 0)
+                result.insert(contraction, at: insertPos)
                 if result.count > limit { result.removeLast() }
             }
         }
@@ -109,29 +130,21 @@ class WordDictionary {
     // MARK: - 用户学习
 
     func recordSelection(word: String) {
-        userFreq[word, default: 0] += 1
-        debounceSave()
-    }
+        let cleanWord = word.lowercased()
+        userFreqCache[cleanWord, default: 0] += 1
+        UserDatabase.shared.recordWordSelection(word: cleanWord)
 
-    private func loadUserFreq() {
-        userFreq = UserDefaults.standard.dictionary(forKey: userDefaultsKey) as? [String: Int] ?? [:]
-    }
-
-    private func debounceSave() {
-        saveTimer?.cancel()
-        let work = DispatchWorkItem { [weak self] in
-            guard let self else { return }
-            UserDefaults.standard.set(self.userFreq, forKey: self.userDefaultsKey)
+        // 记录用户级 bigram
+        if !lastWord.isEmpty {
+            UserDatabase.shared.recordBigram(prev: lastWord, next: cleanWord)
+            // 清空缓存，下次 query 会重新加载
+            lastWordBigramCache = nil
         }
-        saveTimer = work
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2, execute: work)
     }
 
-    /// 立即写入（退出时调用）
+    /// 刷新缓存（SQLite 写入是即时的，此方法保留兼容接口）
     func flush() {
-        saveTimer?.cancel()
-        saveTimer = nil
-        UserDefaults.standard.set(userFreq, forKey: userDefaultsKey)
+        // SQLite writes are immediate per-operation, nothing to flush
     }
 
     // MARK: - Bigram 上下文预测
@@ -160,6 +173,17 @@ class WordDictionary {
     /// 设置上下文词（用户上屏完一个词后调用）
     func setLastWord(_ word: String) {
         lastWord = word.lowercased().trimmingCharacters(in: .whitespaces)
+        lastWordBigramCache = nil
+    }
+
+    /// 获取当前上下文的用户 bigram（带缓存）
+    private func getUserBigramsForCurrentContext() -> [String: Int] {
+        if let cache = lastWordBigramCache, cache.word == lastWord {
+            return cache.bigrams
+        }
+        let bigrams = UserDatabase.shared.getUserBigrams(prev: lastWord)
+        lastWordBigramCache = (lastWord, bigrams)
+        return bigrams
     }
 
     // MARK: - 缩写补全
@@ -209,5 +233,10 @@ class WordDictionary {
 
     func properNounForm(for word: String) -> String? {
         return properNouns[word.lowercased()]
+    }
+
+    /// 查询自定义片语（供 InputController 判断选中项是否为片语）
+    func getSnippet(for shortcut: String) -> String? {
+        return UserDatabase.shared.getSnippet(shortcut)
     }
 }
