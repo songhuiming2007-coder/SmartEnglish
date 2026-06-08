@@ -1,166 +1,165 @@
 # SmartEnglish
 
-macOS 英文预测输入法。输入英文字母时实时弹出候选词窗口，与系统中文输入法体验一致。
+iPhone-style predictive text for macOS. Type a few letters, pick the word. Free and open source.
 
-## 下载安装
+macOS 英文预测输入法。输入几个字母，选择单词。免费开源。
 
-### 第 1 步：允许"任何来源"应用
+---
 
-macOS 默认阻止未签名应用，需要先解除限制：
+## Download & Install
+
+### Step 1: Allow apps from anywhere
+
+macOS blocks unsigned apps by default. Open **Terminal** and run:
 
 ```bash
 sudo spctl --master-disable
 ```
 
-然后按 `Cmd+Space` 搜索 **"隐私与安全性"**，打开后在"允许以下来源的应用"中选择 **任何来源**。
+Then open **System Settings** (press `Cmd+Space` and search "Privacy & Security"), scroll to **"Allow apps downloaded from"** and select **Anywhere**. You can restore this after installation.
 
-> 安装完成后可以恢复原来的设置。
+macOS 默认阻止未签名应用。打开终端运行上述命令，然后在系统设置 → 隐私与安全性中选择"任何来源"。安装完成后可恢复。
 
-### 第 2 步：下载并安装
+### Step 2: Download and install
 
-1. 下载 [SmartEnglish.pkg](https://github.com/songhuiming2007-coder/SmartEnglish/releases/latest/download/SmartEnglish.pkg)
-2. 双击 `.pkg` 文件，按向导完成安装
-3. 安装器会自动将 app 复制到 `~/Library/Input Methods/` 并移除隔离标记
+1. Download [SmartEnglish.pkg](https://github.com/songhuiming2007-coder/SmartEnglish/releases/latest/download/SmartEnglish.pkg)
+2. Double-click the `.pkg` and follow the prompts
+3. The installer copies the app to `~/Library/Input Methods/` and removes quarantine flags
 
-### 第 3 步：添加输入源
+下载 .pkg，双击安装即可，无需终端命令。
 
-1. 打开 **系统设置 → 键盘 → 输入源**
-2. 点击 **+**，找到 **English**，选择 **SmartEnglish**，点击 **添加**
+### Step 3: Add input source
 
-> 如果列表中看不到 SmartEnglish，请**重启电脑**后重试。macOS 会缓存输入源列表，重启是最可靠的解决方法。
+1. Go to **System Settings → Keyboard → Input Sources**
+2. Click **+**, find **English**, select **SmartEnglish**, click **Add**
 
-### 第 4 步：开始使用
+> If SmartEnglish doesn't appear, **restart your Mac** and try again. macOS caches the input source list.
 
-- 按 `Ctrl+Space` 或 `地球键` 切换到 SmartEnglish
-- 输入字母，候选词窗口自动弹出
-- 按 `1-9` 选词，`空格` 确认第一个，`回车` 直接上屏原始字母
+> 如果列表中看不到 SmartEnglish，请重启 Mac 后重试。
 
-**更新**：下载新版 .pkg，双击安装即可覆盖。
+### Step 4: Start typing
 
-## 开发
+- Press `Ctrl+Space` or `Globe key` to switch to SmartEnglish
+- Type letters — a candidate window appears
+- Press `1-9` to pick a word, `Space` to accept the top pick, `Enter` to commit raw text
 
-```bash
-make dev         # 构建 + 安装（开发者模式）
-make pkg         # 构建 .pkg 安装器
-```
+按 `Ctrl+Space` 或地球键切换到 SmartEnglish，输入字母后候选词自动弹出。
 
-首次安装后：
-1. 系统设置 → 键盘 → 输入源
-2. 点击 + 添加输入源
-3. 在 English 分类下找到 SmartEnglish
-4. 菜单栏切换到 SmartEnglish 即可使用
+**Update**: Download the latest `.pkg` and double-click to install — it replaces the old version automatically, no data loss.
 
-如果输入法列表中看不到 SmartEnglish，重启电脑后重试。
+**更新**：下载新版 .pkg 双击安装即可，自动覆盖旧版，不丢数据。
 
-更新安装后：切换到其他输入法再切回来，或注销重新登录。
+---
 
-## 使用
+## Keyboard Shortcuts
 
-| 按键 | 行为 |
-|------|------|
-| a-z | 输入字母，弹出候选词 |
-| 1-9 | 选择对应序号候选词 |
-| Space | 选第一个候选词 |
-| Tab | 选第一个候选词 |
-| Enter | 上屏原始输入（不选候选） |
-| Backspace | 删除末尾字母 |
-| Escape | 取消输入 |
-| 标点/符号 | 先上屏当前文本，再输出符号 |
+| Key | Action |
+|-----|--------|
+| a-z | Type letters, show candidates |
+| 1-9 | Select candidate by number |
+| Space | Accept first candidate |
+| Tab | Accept first candidate |
+| Enter | Commit raw text (skip candidates) |
+| Backspace | Delete last character |
+| Escape | Cancel input |
+| Punctuation | Commit current text, then output symbol |
 
-## 开发
+---
 
-```bash
-make generate    # 生成 Xcode 项目（需要 xcodegen）
-make build       # 构建
-make install     # 安装到输入法目录
-make dev         # 构建 + 安装
-make clean       # 清理构建产物
-make uninstall   # 卸载
-make log         # 查看日志
-make wordlist    # 重新生成词库
-```
+## DND Mode — Disabled Apps
 
-## 词库
+SmartEnglish auto-disables in terminals and editors — keystrokes pass through directly, no candidate window, no interference.
 
-基于 Peter Norvig 的 Google Trillion Word Corpus 词频数据，约 50,000 词。
-用户选词会被记录，常用词会自动提升排序。系统还会学习你的个人词组搭配（比如你经常打 "machine learning"），下次输入时会优先推荐。
+SmartEnglish 在终端和编辑器中自动禁用，按键直接透传。
 
-重新生成词库：
-```bash
-make wordlist
-```
+**Terminals:** Terminal.app · iTerm2 · WezTerm · Ghostty · Kitty · Warp · Alacritty · Hyper
 
-## 不打扰模式
+**Editors & IDEs:** VS Code · Cursor · Sublime Text · Nova · BBEdit · TextMate · Zed · MacVim · All JetBrains IDEs (IntelliJ, PyCharm, WebStorm, CLion, Rider, GoLand, RubyMine, PhpStorm, DataGrip)
 
-SmartEnglish 在以下应用中自动禁用，按键直接透传：
+**Password managers:** 1Password · LastPass · Bitwarden
 
-**终端模拟器：** Terminal.app · iTerm2 · WezTerm · Ghostty · Kitty
-**密码管理器：** 1Password · LastPass · Bitwarden
+Password fields in other apps are also auto-detected and blocked.
 
 其他应用中的密码输入框也会被自动检测并禁用。
 
-## 自定义片语
+---
 
-你可以定义自己的简写 → 完整文本映射，输入法会自动展开。比如：
+## Custom Snippets
 
-| 简写 | 展开 |
-|------|------|
+Define your own shortcuts that expand to full text. For example:
+
+| Shortcut | Expansion |
+|----------|-----------|
 | `addr` | `1234 University Ave, Berkeley, CA 94704` |
 | `sig` | `Best,\nSong Huiming` |
 | `em` | `your@email.com` |
-| `phone` | `+86 123 4567 8910` |
 
-### 设置方法
+### How to set up
 
-1. 打开 Finder，按 `Cmd+Shift+G`，输入 `~/Library/Application Support/SmartEnglish/`
-2. 用任意编辑器（TextEdit、VS Code 等）打开 `snippets.json`
-3. 按以下格式添加你的片语：
+1. Open Finder, press `Cmd+Shift+G`, type `~/Library/Application Support/SmartEnglish/`
+2. Open `snippets.json` with any editor
+3. Add your snippets:
 
 ```json
 {
-  "addr": "你的完整地址",
-  "sig": "你的邮件签名",
-  "em": "你的邮箱",
-  "phone": "你的电话"
+  "addr": "Your full address here",
+  "sig": "Your email signature",
+  "em": "your@email.com"
 }
 ```
 
-4. 保存文件后，切换输入法刷新即可生效
+4. Save, switch input method to refresh
 
-> 片语在候选词中拥有最高优先级，输入完全匹配的简写时会直接出现在第一位。
+Snippets appear at the top of the candidate list with highest priority.
 
-## 版本历史
+片语在候选词中拥有最高优先级。
+
+---
+
+## Version History
 
 ### v0.4.0
-
-- **SQLite 存储迁移** — 用户词频从 UserDefaults 迁移到 SQLite（零第三方依赖），首次启动自动迁移
-- **用户级 Bigram 学习** — 记录词与词之间的搭配关系（如输入 "thank" 后 "you" 会优先推荐），权重 ×50000
-- **自定义片语** — 通过 `~/Library/Application Support/SmartEnglish/snippets.json` 定义简写 → 全文展开
+- **SQLite storage** — user word frequency migrated from UserDefaults to SQLite (zero dependencies), auto-migrates on first launch
+- **User bigram learning** — records word-to-word transitions (e.g., "thank" → "you"), ×50000 weight boost
+- **Custom snippets** — define shortcuts that expand to full text via `~/Library/Application Support/SmartEnglish/snippets.json`
 
 ### v0.3.0
-
-- **不打扰模式** — 终端、密码管理器等场景自动禁用，按键直接透传
-- **缩写补全** — 输入 `dont` 自动补全为 `don't`，`cant` → `can't` 等（51 组缩写）
-- **数字混合输入** — 支持 `h2o`、`3d`、`v2` 等字母+数字混合词汇
-- **句首大写** — 句号/问号/感叹号后自动大写下一个候选词
-- **Bigram 上下文预测** — 基于前一个词预测下一个词（公共语料库）
+- **DND mode** — auto-disables in terminals, editors, and password managers
+- **Abbreviation completion** — "dont" → "don't", "cant" → "can't" (51 contractions)
+- **Mixed input** — supports "h2o", "3d", "v2" and other alphanumeric words
+- **Auto-capitalize** — sentence-start capitalization after `.`, `?`, `!`
+- **Bigram prediction** — predicts next word based on previous word (public corpus)
 
 ### v0.2.1
-
-- 修复菜单栏显示名称和图标模糊问题
+- Fixed menu bar display name and icon blurriness
 
 ### v0.2.0
+- First public release
+- 50,000-word frequency dictionary (Google Trillion Word Corpus)
+- 1,146 proper nouns (countries, languages, brands, etc.)
+- Smart casing (ENG→ENGLAND, Eng→England)
+- Custom NSPanel candidate window
+- Keyboard-first workflow
 
-- 首次公开版本
-- 50,000 词频词典（基于 Google Trillion Word Corpus）
-- 1,146 专有名词（国家、语言、品牌等）
-- 智能大小写（ENG→ENGLAND，Eng→England）
-- 自定义 NSPanel 候选窗口
-- 键盘优先操作（1-9 选词，空格确认，回车原样上屏）
+---
 
-## 技术栈
+## Development
+
+```bash
+make generate    # Generate Xcode project (requires xcodegen)
+make build       # Build
+make install     # Install to ~/Library/Input Methods/
+make dev         # Build + install
+make pkg         # Build .pkg installer
+make clean       # Clean build artifacts
+make uninstall   # Uninstall
+make log         # View logs
+make wordlist    # Regenerate word dictionary
+```
+
+## Tech Stack
 
 - Swift + InputMethodKit + AppKit
-- 自定义 NSPanel 候选窗口（非 IMKCandidates）
-- macOS 13+ 支持
-- ad-hoc 签名，无需付费开发者账号
+- Custom NSPanel candidate window (not IMKCandidates)
+- macOS 13+
+- Ad-hoc signing, no paid developer account needed

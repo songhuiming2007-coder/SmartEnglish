@@ -30,11 +30,38 @@ class SmartEnglishInputController: IMKInputController {
     // ==================== 不打扰模式 ====================
 
     private static let blockedApps: Set<String> = [
+        // Terminals
         "com.apple.Terminal",
         "com.googlecode.iterm2",
         "com.github.wez.wezterm",
         "com.mitchellh.ghostty",
         "net.kovidgoyal.kitty",
+        "dev.warp.Warp-Stable",
+        "org.alacritty",
+        "co.zeit.hyper",
+        // Editors & IDEs
+        "com.microsoft.VSCode",
+        "com.microsoft.VSCodeInsiders",
+        "com.todesktop.230313mzl4w4u92",       // Cursor
+        "com.sublimetext.4",
+        "com.panic.Nova",
+        "com.barebones.bbedit",
+        "org.macromates.TextMate",
+        "dev.zed.Zed",
+        "org.vim.MacVim",
+        // JetBrains IDEs
+        "com.jetbrains.intellij",              // IntelliJ IDEA
+        "com.jetbrains.intellij.ce",           // IntelliJ CE
+        "com.jetbrains.pycharm",               // PyCharm
+        "com.jetbrains.pycharm.ce",            // PyCharm CE
+        "com.jetbrains.WebStorm",              // WebStorm
+        "com.jetbrains.CLion",                 // CLion
+        "com.jetbrains.Rider",                 // Rider
+        "com.jetbrains.GoLand",                // GoLand
+        "com.jetbrains.RubyMine",              // RubyMine
+        "com.jetbrains.PhpStorm",              // PhpStorm
+        "com.jetbrains.DataGrip",              // DataGrip
+        // Password managers
         "com.1password.1password",
         "com.agilebits.onepassword7",
         "com.lastpass.LastPass",
