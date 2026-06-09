@@ -57,12 +57,15 @@ macOS 默认阻止未签名应用。打开终端运行上述命令，然后在�
 |-----|--------|
 | a-z | Type letters, show candidates |
 | 1-9 | Select candidate by number |
-| Space | Accept first candidate |
+| ← → | Move selection highlight |
+| Space | Accept selected candidate |
 | Tab | Accept first candidate |
 | Enter | Commit raw text (skip candidates) |
 | Backspace | Delete last character |
 | Escape | Cancel input |
 | Punctuation | Commit current text, then output symbol |
+| Mouse hover | Highlight candidate |
+| Mouse click | Select candidate |
 
 ---
 
@@ -118,6 +121,13 @@ Snippets appear at the top of the candidate list with highest priority.
 
 ## Version History
 
+### v0.4.2
+- **Unified geometric model** — all candidate window dimensions derived from single `pillHeight` variable (design token pattern)
+- **Mouse click selection** — click a candidate pill to select it
+- **Arrow key navigation** — ← → keys move selection highlight
+- **Proper noun candidates** — "it" and "IT" appear as separate candidates; "IP", "AI", "USA" etc. always uppercase
+- **Standard typographic centering** — `baseline = pillMidY - font.ascender / 2`
+
 ### v0.4.0
 - **SQLite storage** — user word frequency migrated from UserDefaults to SQLite (zero dependencies), auto-migrates on first launch
 - **User bigram learning** — records word-to-word transitions (e.g., "thank" → "you"), ×50000 weight boost
@@ -163,3 +173,73 @@ make wordlist    # Regenerate word dictionary
 - Custom NSPanel candidate window (not IMKCandidates)
 - macOS 13+
 - Ad-hoc signing, no paid developer account needed
+
+---
+
+## Development Lessons
+
+### UI Geometry: One Variable to Rule Them All
+
+Don't treat `windowHeight`, `pillInset`, `hPadding`, `pillHPad`, `numWordGap`, `itemGap` as 6 independent parameters to "tweak". 6 parameters = 6 degrees of freedom = adjusting one breaks the others.
+
+**Do this instead:** Pick one base variable (`pillHeight`), derive everything else with fixed ratios. If it looks wrong, change the one variable. The ratios are locked.
+
+```
+pillHeight = 24                 ← only tunable value
+windowVerticalPadding = × 0.18
+windowHeight = × 1.36
+pillCornerRadius = / 2
+pillLeftPadding = × 0.38
+pillRightPadding = × 0.50
+pillContentGap = × 0.18
+itemGap = × 0.55
+wordFont = × 0.54 pt
+indexFont = × 0.42 pt
+```
+
+This is the "design token" pattern. Every mature design system (Apple HIG, Material Design) works this way.
+
+### Text Centering: Use `ascender`, Not Clever Formulas
+
+Don't use `capHeight`, `xHeight`, or weighted averages like `(capHeight + xHeight) / 4 * 0.9`. These break on different letter combinations — "Hello" (tall ascenders) and "moon" (short rounds) have different visual centers, but the formula gives the same offset.
+
+**Do this instead:**
+
+```swift
+let baseline = pillRect.midY - font.ascender / 2
+```
+
+`ascender` is the distance from baseline to the visual top of text. It's what the font designer calibrated for "where text looks like". Dividing by 2 puts half above the center, half below. No magic numbers, no correction factors.
+
+If it still looks off, the problem is the font metrics for that specific size, not the centering algorithm.
+
+### Candidate Injection: Store Final Form, Don't Re-derive
+
+When injecting variants (e.g., "it" + "IT"), don't store raw and re-apply transformations in `selectCandidate`. The transformation logic will override the user's explicit choice.
+
+**Do this instead:** Store the exact form to commit as the "raw" value. For injected proper nouns, `raw = "IT"`. For normal candidates, `raw = "it"`. `selectCandidate` commits `rawWord` directly — no re-transformation.
+
+```swift
+// In updateCandidates:
+pairs.append((raw: "it", display: "it"))       // lowercase variant
+pairs.append((raw: "IT", display: "IT"))       // proper noun — raw IS the final form
+
+// In selectCandidate:
+// Just use rawWord, don't re-apply casing
+```
+
+### IMK Mouse Events: Wire the Callback
+
+`CandidateView.onClicked` fires on click, but it calls `CandidateWindow.onCandidateSelected`. If nobody sets that callback, clicks silently do nothing.
+
+**Do this in `activateServer`:**
+```swift
+candidateWindow.onCandidateSelected = { [weak self, weak client] index in
+    self?.selectCandidate(at: index, client: client)
+}
+```
+
+And clean up in `deactivateServer`:
+```swift
+candidateWindow.onCandidateSelected = nil
+```

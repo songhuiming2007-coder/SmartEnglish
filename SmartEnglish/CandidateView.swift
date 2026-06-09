@@ -3,14 +3,23 @@ import Cocoa
 class CandidateView: NSView {
     private var candidates: [String] = []
     private var itemRects: [NSRect] = []
-    private var selectedIndex: Int = 0
+    var selectedIndex: Int = 0 { didSet { needsDisplay = true } }
     var onClicked: ((Int) -> Void)?
 
-    private let font = NSFont.systemFont(ofSize: 14)
-    private let indexFont = NSFont.monospacedDigitSystemFont(ofSize: 11, weight: .regular)
-    private let hPadding: CGFloat = 12
-    private let itemSpacing: CGFloat = 20
-    private let itemInnerPadding: CGFloat = 6
+    // === 唯一调节点 ===
+    private let pillHeight: CGFloat = 24
+
+    // === 派生几何（全部从 pillHeight 推导） ===
+    private var windowVerticalPadding: CGFloat { pillHeight * 0.18 }
+    private var windowHeight: CGFloat { pillHeight + windowVerticalPadding * 2 }
+    private var windowHorizontalPadding: CGFloat { pillHeight * 0.35 }
+    private var pillCornerRadius: CGFloat { pillHeight / 2 }
+    private var pillLeftPadding: CGFloat { pillHeight * 0.38 }
+    private var pillRightPadding: CGFloat { pillHeight * 0.50 }
+    private var pillContentGap: CGFloat { pillHeight * 0.18 }
+    private var itemGap: CGFloat { pillHeight * 0.55 }
+    private var wordFont: NSFont { NSFont.systemFont(ofSize: pillHeight * 0.54) }
+    private var indexFont: NSFont { NSFont.systemFont(ofSize: pillHeight * 0.42) }
 
     override var acceptsFirstResponder: Bool { true }
 
@@ -35,87 +44,120 @@ class CandidateView: NSView {
         needsDisplay = true
     }
 
-    func idealSize() -> NSSize {
-        var totalWidth: CGFloat = hPadding
+    // MARK: - 横向布局算法
+
+    private typealias LayoutItem = (pillRect: NSRect, indexX: CGFloat, wordX: CGFloat)
+
+    private func computeLayout() -> [LayoutItem] {
+        var items: [LayoutItem] = []
+        var cursorX: CGFloat = windowHorizontalPadding
+
         for (i, word) in candidates.enumerated() {
             let indexStr = "\(i + 1)"
-            let indexSize = (indexStr as NSString).size(withAttributes: [.font: indexFont])
-            let wordSize = (word as NSString).size(withAttributes: [.font: font])
-            let contentWidth = indexSize.width + 4 + wordSize.width
-            totalWidth += contentWidth + itemInnerPadding * 2 + itemSpacing
+            let indexWidth = (indexStr as NSString).size(withAttributes: [.font: indexFont]).width
+            let wordWidth = (word as NSString).size(withAttributes: [.font: wordFont]).width
+
+            // pill 总宽度 = 左内边距 + 数字 + 间距 + 单词 + 右内边距
+            let pillWidth = pillLeftPadding + indexWidth + pillContentGap + wordWidth + pillRightPadding
+
+            let pillRect = NSRect(
+                x: cursorX,
+                y: windowVerticalPadding,
+                width: pillWidth,
+                height: pillHeight
+            )
+
+            let indexX = cursorX + pillLeftPadding
+            let wordX = indexX + indexWidth + pillContentGap
+
+            items.append((pillRect, indexX, wordX))
+
+            cursorX = pillRect.maxX + itemGap
         }
-        // Arrow space
-        totalWidth += 16 + hPadding
-        return NSSize(width: max(totalWidth, 80), height: 32)
+
+        return items
     }
+
+    func idealSize() -> NSSize {
+        let layout = computeLayout()
+
+        var totalWidth: CGFloat
+        if let last = layout.last {
+            totalWidth = last.pillRect.maxX + windowHorizontalPadding
+        } else {
+            totalWidth = windowHorizontalPadding * 2
+        }
+
+        // chevron 右侧
+        let chevronW = ("∨" as NSString).size(withAttributes: [.font: indexFont]).width
+        totalWidth += itemGap + chevronW + windowHorizontalPadding
+
+        return NSSize(width: max(totalWidth, 80), height: windowHeight)
+    }
+
+    // MARK: - 绘制
 
     override func draw(_ dirtyRect: NSRect) {
-        // Background
-        let bgPath = NSBezierPath(roundedRect: bounds, xRadius: 10, yRadius: 10)
-        NSColor.windowBackgroundColor.setFill()
-        bgPath.fill()
-
-        // Calculate vertical center y for text
-        let fontHeight = max(font.ascender - font.descender, indexFont.ascender - indexFont.descender)
-        let centerY = (bounds.height - fontHeight) / 2
-
-        var x: CGFloat = hPadding
+        // 背景由 NSVisualEffectView 处理，这里只画内容
+        let layout = computeLayout()
         itemRects = []
 
-        for (i, word) in candidates.enumerated() {
-            let indexStr = "\(i + 1)"
-            let isHighlighted = (i == selectedIndex)
+        for (i, (pillRect, indexX, wordX)) in layout.enumerated() {
+            let isSelected = (i == selectedIndex)
+            itemRects.append(pillRect)
 
-            let indexAttrs: [NSAttributedString.Key: Any] = [
-                .font: indexFont,
-                .foregroundColor: isHighlighted ? NSColor.white : NSColor.secondaryLabelColor
-            ]
-            let wordAttrs: [NSAttributedString.Key: Any] = [
-                .font: font,
-                .foregroundColor: isHighlighted ? NSColor.white : NSColor.labelColor
-            ]
-
-            let indexSize = (indexStr as NSString).size(withAttributes: indexAttrs)
-            let wordSize = (word as NSString).size(withAttributes: wordAttrs)
-            let contentWidth = indexSize.width + 4 + wordSize.width
-
-            // Item rect: left padding + content + right padding
-            let itemRect = NSRect(
-                x: x,
-                y: 0,
-                width: contentWidth + itemInnerPadding * 2,
-                height: bounds.height
-            )
-            itemRects.append(itemRect)
-
-            // Highlight background
-            if isHighlighted {
-                let highlightPath = NSBezierPath(roundedRect: itemRect, xRadius: 6, yRadius: 6)
-                NSColor.selectedContentBackgroundColor.setFill()
-                highlightPath.fill()
+            // 1. 画 pill（只有选中的画 pill 背景）
+            if isSelected {
+                let path = NSBezierPath(
+                    roundedRect: pillRect,
+                    xRadius: pillCornerRadius,
+                    yRadius: pillCornerRadius
+                )
+                NSColor.controlAccentColor.setFill()
+                path.fill()
             }
 
-            // Draw index vertically centered
-            let indexY = centerY + (fontHeight - indexSize.height) / 2
-            (indexStr as NSString).draw(at: NSPoint(x: x + itemInnerPadding, y: indexY), withAttributes: indexAttrs)
+            // 2. 画数字（标准排版居中：baseline = 中心 - ascender/2）
+            let indexStr = "\(i + 1)"
+            let indexBaselineY = pillRect.midY - indexFont.ascender / 2
+            let indexAttrs: [NSAttributedString.Key: Any] = [
+                .font: indexFont,
+                .foregroundColor: isSelected
+                    ? NSColor.white.withAlphaComponent(0.85)
+                    : NSColor.secondaryLabelColor
+            ]
+            (indexStr as NSString).draw(
+                at: NSPoint(x: indexX, y: indexBaselineY),
+                withAttributes: indexAttrs
+            )
 
-            // Draw word vertically centered
-            let wordY = centerY + (fontHeight - wordSize.height) / 2
-            (word as NSString).draw(at: NSPoint(x: x + itemInnerPadding + indexSize.width + 4, y: wordY), withAttributes: wordAttrs)
-
-            x += itemRect.width + itemSpacing
+            // 3. 画单词（标准排版居中：baseline = 中心 - ascender/2）
+            let word = candidates[i]
+            let wordBaselineY = pillRect.midY - wordFont.ascender / 2
+            let wordAttrs: [NSAttributedString.Key: Any] = [
+                .font: wordFont,
+                .foregroundColor: isSelected ? NSColor.white : NSColor.labelColor
+            ]
+            (word as NSString).draw(
+                at: NSPoint(x: wordX, y: wordBaselineY),
+                withAttributes: wordAttrs
+            )
         }
 
-        // Arrow "∨"
-        let arrowAttrs: [NSAttributedString.Key: Any] = [
-            .font: NSFont.systemFont(ofSize: 14),
+        // Chevron ∨
+        let chevronAttrs: [NSAttributedString.Key: Any] = [
+            .font: indexFont,
             .foregroundColor: NSColor.secondaryLabelColor
         ]
-        let arrowStr = "∨"
-        let arrowSize = (arrowStr as NSString).size(withAttributes: arrowAttrs)
-        let arrowY = centerY + (fontHeight - arrowSize.height) / 2
-        (arrowStr as NSString).draw(at: NSPoint(x: bounds.width - hPadding - arrowSize.width, y: arrowY), withAttributes: arrowAttrs)
+        let chevronW = ("∨" as NSString).size(withAttributes: chevronAttrs).width
+        let chevronBaselineY = windowVerticalPadding + pillHeight / 2 - indexFont.ascender / 2
+        ("∨" as NSString).draw(
+            at: NSPoint(x: bounds.width - windowHorizontalPadding - chevronW, y: chevronBaselineY),
+            withAttributes: chevronAttrs
+        )
     }
+
+    // MARK: - 鼠标交互
 
     override func mouseMoved(with event: NSEvent) {
         let point = convert(event.locationInWindow, from: nil)
@@ -126,9 +168,7 @@ class CandidateView: NSView {
         }
     }
 
-    override func mouseExited(with event: NSEvent) {
-        // Keep selection on exit
-    }
+    override func mouseExited(with event: NSEvent) {}
 
     override func mouseDown(with event: NSEvent) {
         let point = convert(event.locationInWindow, from: nil)

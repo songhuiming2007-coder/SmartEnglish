@@ -5,13 +5,27 @@ class CandidateWindow {
 
     private let panel: NSPanel
     private let candidateView: CandidateView
+    private let visualEffect: NSVisualEffectView
     var onCandidateSelected: ((Int) -> Void)?
+
+    /// 当前选中候选词索引（供方向键控制）
+    var selectedIndex: Int {
+        get { candidateView.selectedIndex }
+        set { candidateView.selectedIndex = newValue }
+    }
 
     private init() {
         candidateView = CandidateView()
 
+        visualEffect = NSVisualEffectView()
+        visualEffect.material = .menu
+        visualEffect.blendingMode = .behindWindow
+        visualEffect.state = .active
+        visualEffect.wantsLayer = true
+
+        // 初始高度 = pillHeight(26) * 1.36 ≈ 35.4，实际由 idealSize() 覆盖
         panel = NSPanel(
-            contentRect: NSRect(x: 0, y: 0, width: 400, height: 32),
+            contentRect: NSRect(x: 0, y: 0, width: 400, height: 36),
             styleMask: [.nonactivatingPanel, .borderless],
             backing: .buffered,
             defer: true
@@ -22,8 +36,9 @@ class CandidateWindow {
         panel.hasShadow = true
         panel.isOpaque = false
         panel.backgroundColor = .clear
-        panel.contentView = candidateView
-        panel.isMovableByWindowBackground = false
+
+        panel.contentView = visualEffect
+        visualEffect.addSubview(candidateView)
 
         candidateView.onClicked = { [weak self] index in
             self?.onCandidateSelected?(index)
@@ -35,6 +50,11 @@ class CandidateWindow {
 
         let size = candidateView.idealSize()
         panel.setContentSize(size)
+        visualEffect.frame = NSRect(origin: .zero, size: size)
+        candidateView.frame = NSRect(origin: .zero, size: size)
+
+        visualEffect.layer?.cornerRadius = size.height / 2
+        visualEffect.layer?.masksToBounds = true
 
         var origin = cursorRect.origin
         origin.y -= size.height + 4
@@ -54,6 +74,7 @@ class CandidateWindow {
 
         panel.setFrameOrigin(origin)
         panel.orderFront(nil)
+        panel.invalidateShadow()
     }
 
     func hide() {

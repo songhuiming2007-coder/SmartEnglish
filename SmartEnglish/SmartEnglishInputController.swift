@@ -18,10 +18,18 @@ class SmartEnglishInputController: IMKInputController {
         super.activateServer(sender)
         shouldCapitalizeNext = true
         reset()
+
+        // 接线：鼠标点击候选词
+        guard let client = sender as? IMKTextInput else { return }
+        candidateWindow.onCandidateSelected = { [weak self, weak client] index in
+            guard let self, let client else { return }
+            self.selectCandidate(at: index, client: client)
+        }
     }
 
     override func deactivateServer(_ sender: Any!) {
         commitComposing(sender as? IMKTextInput)
+        candidateWindow.onCandidateSelected = nil
         candidateWindow.hide()
         dictionary.flush()
         super.deactivateServer(sender)
@@ -186,6 +194,16 @@ class SmartEnglishInputController: IMKInputController {
             return false
         }
 
+        // 方向键：移动候选词选中状态
+        if (keyCode == 123 || keyCode == 124 || keyCode == 125 || keyCode == 126) {
+            if !composingText.isEmpty && !candidates.isEmpty {
+                let delta = (keyCode == 123 || keyCode == 125) ? -1 : 1  // 左/下 -1, 右/上 +1
+                let newIndex = (candidateWindow.selectedIndex + delta + candidates.count) % candidates.count
+                candidateWindow.selectedIndex = newIndex
+                return true
+            }
+        }
+
         // Escape：取消输入
         if keyCode == 53 {
             if !composingText.isEmpty {
@@ -248,10 +266,7 @@ class SmartEnglishInputController: IMKInputController {
             return word.prefix(1).uppercased() + word.dropFirst()
 
         case .allLowercase:
-            // 优先级：专有名词 > 句首大写 > 原样
-            if let properForm = dictionary.properNounForm(for: word) {
-                return properForm
-            }
+            // 句首大写 > 原样（专有名词已由候选列表注入，不再在这里强制转换）
             if shouldCapitalizeNext {
                 return word.prefix(1).uppercased() + word.dropFirst()
             }
@@ -281,20 +296,47 @@ class SmartEnglishInputController: IMKInputController {
             return
         }
 
-        candidates = dictionary.query(prefix: composingText.lowercased(), limit: 9)
+        let rawList = dictionary.query(prefix: composingText.lowercased(), limit: 9)
 
-        if candidates.isEmpty {
+        if rawList.isEmpty {
+            candidates = []
             candidateWindow.hide()
-        } else {
-            // 句首大写：对候选词应用大写（不修改原始 candidates，只影响显示）
-            var displayCandidates = candidates
-            if shouldCapitalizeNext {
-                displayCandidates = applyCapitalization(to: candidates, snippetAtZero: dictionary.getSnippet(for: composingText.lowercased()) != nil)
-            }
-            var cursorRect = NSRect.zero
-            let _ = client.attributes(forCharacterIndex: 0, lineHeightRectangle: &cursorRect)
-            candidateWindow.show(candidates: displayCandidates, cursorRect: cursorRect)
+            return
         }
+
+        // 构建 (raw, display) 对，注入专有名词变体
+        let snippetAtZero = dictionary.getSnippet(for: composingText.lowercased()) != nil
+        var pairs: [(raw: String, display: String)] = []
+
+        for (i, raw) in rawList.enumerated() {
+            let isSnippet = (i == 0 && snippetAtZero)
+            let display: String
+            if isSnippet {
+                display = raw
+            } else if shouldCapitalizeNext {
+                display = raw.prefix(1).uppercased() + raw.dropFirst()
+            } else {
+                display = raw
+            }
+            pairs.append((raw, display))
+
+            // 注入专有名词变体（跳过首位片语）
+            if !isSnippet, let properForm = dictionary.properNounForm(for: raw),
+               properForm != display {
+                // raw = properForm，这样 selectCandidate 直接上屏正确形式
+                pairs.append((raw: properForm, display: properForm))
+            }
+        }
+
+        // 截断到 9 个
+        if pairs.count > 9 { pairs = Array(pairs.prefix(9)) }
+
+        candidates = pairs.map { $0.raw }
+        let displayCandidates = pairs.map { $0.display }
+
+        var cursorRect = NSRect.zero
+        let _ = client.attributes(forCharacterIndex: 0, lineHeightRectangle: &cursorRect)
+        candidateWindow.show(candidates: displayCandidates, cursorRect: cursorRect)
     }
 
     /// 对候选词列表首字母大写（跳过首位片语）
@@ -322,7 +364,14 @@ class SmartEnglishInputController: IMKInputController {
             return
         }
 
-        let finalWord = applyCasing(to: rawWord, composingText: composingText, client: client)
+        // 专有名词形式（如 "IT"）：直接上屏，不走大小写转换
+        let finalWord: String
+        if let properForm = dictionary.properNounForm(for: rawWord.lowercased()),
+           rawWord == properForm {
+            finalWord = rawWord
+        } else {
+            finalWord = applyCasing(to: rawWord, composingText: composingText, client: client)
+        }
 
         client.insertText(
             finalWord + " ",

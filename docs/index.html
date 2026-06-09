@@ -488,15 +488,21 @@ body.lang-zh .en { display: none; }
       <div class="feature-card">
         <div class="feature-icon">&#128296;</div>
         <h3>v0.4.2</h3>
-        <p><span class="en"><strong>Bug fixes</strong><br><br>
-        Fixed ambiguous contraction overflow: <code style="font-family:var(--mono);font-size:13px;background:var(--bg);padding:1px 6px;border-radius:4px;">removeFirst()</code> was incorrectly evicting the top candidate (snippet or highest-score word) when the list was full.<br><br>
-        Fixed silent SQLite write failures: word frequency, bigram, and snippet writes now log errors on failure instead of silently dropping data.<br><br>
-        Removed keystroke debug log that leaked input content to the system log on every keypress.<br><br>
-        Removed per-keypress log flood in DND mode (terminals, password managers).</span><span class="zh"><strong>Bug 修复</strong><br><br>
-        修复歧义缩写候选溢出问题：列表满时 <code style="font-family:var(--mono);font-size:13px;background:var(--bg);padding:1px 6px;border-radius:4px;">removeFirst()</code> 会错误删除最高优先级候选词（片语或评分最高的词）。<br><br>
-        修复 SQLite 写入静默失败：词频、bigram、片语写入失败时现在会记录错误日志，而不是悄悄丢数据。<br><br>
+        <p><span class="en"><strong>Bug fixes &amp; UI overhaul</strong><br><br>
+        Fixed ambiguous contraction overflow: <code style="font-family:var(--mono);font-size:13px;background:var(--bg);padding:1px 6px;border-radius:4px;">removeFirst()</code> was incorrectly evicting the top candidate when the list was full.<br><br>
+        Fixed silent SQLite write failures: word frequency, bigram, and snippet writes now log errors on failure.<br><br>
+        Removed keystroke debug log that leaked input content to the system log.<br><br>
+        <strong>Candidate window UI overhaul:</strong> all dimensions derived from a single <code style="font-family:var(--mono);font-size:13px;background:var(--bg);padding:1px 6px;border-radius:4px;">pillHeight</code> variable (design token pattern). Standard typographic centering with <code style="font-family:var(--mono);font-size:13px;background:var(--bg);padding:1px 6px;border-radius:4px;">font.ascender / 2</code>.<br><br>
+        <strong>Mouse click selection</strong> — click a candidate pill to select it.<br><br>
+        <strong>Arrow key navigation</strong> — ← → keys move selection highlight.<br><br>
+        <strong>Proper noun candidates</strong> — "it" and "IT" appear as separate candidates; "IP", "AI", "USA" etc. always uppercase.</span><span class="zh"><strong>Bug 修复 &amp; UI 重构</strong><br><br>
+        修复歧义缩写候选溢出问题：列表满时 <code style="font-family:var(--mono);font-size:13px;background:var(--bg);padding:1px 6px;border-radius:4px;">removeFirst()</code> 会错误删除最高优先级候选词。<br><br>
+        修复 SQLite 写入静默失败：词频、bigram、片语写入失败时现在会记录错误日志。<br><br>
         删除每次按键都向系统日志泄露按键内容的 DEBUG 日志。<br><br>
-        删除不打扰模式（终端、密码管理器）下每次按键都写一条日志的问题。</span></p>
+        <strong>候选窗 UI 重构：</strong>所有尺寸从单一 <code style="font-family:var(--mono);font-size:13px;background:var(--bg);padding:1px 6px;border-radius:4px;">pillHeight</code> 变量派生（design token 模式）。标准排版居中公式 <code style="font-family:var(--mono);font-size:13px;background:var(--bg);padding:1px 6px;border-radius:4px;">font.ascender / 2</code>。<br><br>
+        <strong>鼠标点击选词</strong> — 点击候选胶囊即可选中。<br><br>
+        <strong>方向键导航</strong> — ← → 键移动选中高亮。<br><br>
+        <strong>专有名词候选</strong> — "it" 和 "IT" 作为独立候选词显示；"IP"、"AI"、"USA" 等始终大写。</span></p>
       </div>
       <div class="feature-card">
         <div class="feature-icon">&#128683;</div>
