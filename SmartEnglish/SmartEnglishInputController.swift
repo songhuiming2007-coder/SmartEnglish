@@ -74,14 +74,12 @@ class SmartEnglishInputController: IMKInputController {
         let attrs = client.attributes(forCharacterIndex: 0, lineHeightRectangle: &rect)
         let secureKey = NSAttributedString.Key(rawValue: "NSTextInputSecureField")
         if let isSecure = attrs?[secureKey] as? Bool, isSecure {
-            NSLog("SmartEnglish: Disabled — secure field detected")
             return true
         }
 
         // 2. 检查特定应用（终端、密码管理器等）
         let bundleId = client.bundleIdentifier() ?? ""
         if SmartEnglishInputController.blockedApps.contains(bundleId) {
-            NSLog("SmartEnglish: Disabled — blocked app: %@", bundleId)
             return true
         }
 
@@ -93,8 +91,6 @@ class SmartEnglishInputController: IMKInputController {
     override func handle(_ event: NSEvent!, client sender: Any!) -> Bool {
         guard let event = event, event.type == .keyDown else { return false }
         guard let client = sender as? IMKTextInput else { return false }
-
-        NSLog("SmartEnglish DEBUG: handle keyCode=%d chars=%@", event.keyCode, event.characters ?? "nil")
 
         // 不打扰模式：密码框/终端等场景，所有按键透传
         if shouldDisableInContext(client: client) {

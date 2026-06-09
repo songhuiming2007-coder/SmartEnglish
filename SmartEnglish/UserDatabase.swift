@@ -107,7 +107,10 @@ class UserDatabase {
             sqlite3_bind_int(stmt, 3, Int32(now))
             sqlite3_bind_int(stmt, 4, Int32(increment))
             sqlite3_bind_int(stmt, 5, Int32(now))
-            sqlite3_step(stmt)
+            let rc = sqlite3_step(stmt)
+            if rc != SQLITE_DONE {
+                NSLog("SmartEnglish ERROR: recordWordSelection failed: %s", sqlite3_errmsg(db))
+            }
         }
         sqlite3_finalize(stmt)
     }
@@ -162,7 +165,10 @@ class UserDatabase {
             sqlite3_bind_text(stmt, 2, next, -1, SQLITE_TRANSIENT)
             sqlite3_bind_int(stmt, 3, Int32(now))
             sqlite3_bind_int(stmt, 4, Int32(now))
-            sqlite3_step(stmt)
+            let rc = sqlite3_step(stmt)
+            if rc != SQLITE_DONE {
+                NSLog("SmartEnglish ERROR: recordBigram failed: %s", sqlite3_errmsg(db))
+            }
         }
         sqlite3_finalize(stmt)
     }
@@ -208,7 +214,10 @@ class UserDatabase {
             }
             sqlite3_bind_int(stmt, 4, Int32(now))
             sqlite3_bind_int(stmt, 5, Int32(now))
-            sqlite3_step(stmt)
+            let rc = sqlite3_step(stmt)
+            if rc != SQLITE_DONE {
+                NSLog("SmartEnglish ERROR: setSnippet failed: %s", sqlite3_errmsg(db))
+            }
         }
         sqlite3_finalize(stmt)
     }
@@ -251,7 +260,10 @@ class UserDatabase {
 
         if sqlite3_prepare_v2(db, sql, -1, &stmt, nil) == SQLITE_OK {
             sqlite3_bind_text(stmt, 1, shortcut.lowercased(), -1, SQLITE_TRANSIENT)
-            sqlite3_step(stmt)
+            let rc = sqlite3_step(stmt)
+            if rc != SQLITE_DONE {
+                NSLog("SmartEnglish ERROR: deleteSnippet failed: %s", sqlite3_errmsg(db))
+            }
         }
         sqlite3_finalize(stmt)
     }
