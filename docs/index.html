@@ -294,7 +294,7 @@ body.lang-zh .en { display: none; }
   <div class="container">
     <div class="hero-badge">
       <span class="dot"></span>
-      <span data-en="v0.4.1 — SQLite, bigram learning, custom snippets, DND for all editors" data-zh="v0.4.1 — SQLite 存储、bigram 学习、自定义片语、全编辑器不打扰">v0.4.1 — SQLite, bigram learning, custom snippets, DND for all editors</span>
+      <span data-en="v0.4.2 — Bug fixes" data-zh="v0.4.2 — Bug 修复">v0.4.2 — Bug fixes</span>
     </div>
     <h1>
       <span class="dim"><span class="en">iPhone-style</span><span class="zh">iPhone 式</span></span><br>
@@ -486,6 +486,26 @@ body.lang-zh .en { display: none; }
     <div class="section-desc"><span class="en">SmartEnglish is actively developed. Here's a summary of every release.</span><span class="zh">SmartEnglish 持续迭代中，以下是每个版本的更新摘要。</span></div>
     <div class="features-grid">
       <div class="feature-card">
+        <div class="feature-icon">&#128296;</div>
+        <h3>v0.4.2</h3>
+        <p><span class="en"><strong>Bug fixes</strong><br><br>
+        Fixed ambiguous contraction overflow: <code style="font-family:var(--mono);font-size:13px;background:var(--bg);padding:1px 6px;border-radius:4px;">removeFirst()</code> was incorrectly evicting the top candidate (snippet or highest-score word) when the list was full.<br><br>
+        Fixed silent SQLite write failures: word frequency, bigram, and snippet writes now log errors on failure instead of silently dropping data.<br><br>
+        Removed keystroke debug log that leaked input content to the system log on every keypress.<br><br>
+        Removed per-keypress log flood in DND mode (terminals, password managers).</span><span class="zh"><strong>Bug 修复</strong><br><br>
+        修复歧义缩写候选溢出问题：列表满时 <code style="font-family:var(--mono);font-size:13px;background:var(--bg);padding:1px 6px;border-radius:4px;">removeFirst()</code> 会错误删除最高优先级候选词（片语或评分最高的词）。<br><br>
+        修复 SQLite 写入静默失败：词频、bigram、片语写入失败时现在会记录错误日志，而不是悄悄丢数据。<br><br>
+        删除每次按键都向系统日志泄露按键内容的 DEBUG 日志。<br><br>
+        删除不打扰模式（终端、密码管理器）下每次按键都写一条日志的问题。</span></p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">&#128683;</div>
+        <h3>v0.4.1</h3>
+        <p><span class="en"><strong>DND mode expanded</strong> — auto-disable list grows from 9 to 30+ apps: 8 terminals, 18+ editors and IDEs (all JetBrains IDEs added), 4 password managers.<br><br>
+        <strong>Bilingual README</strong> — documentation now available in both English and Chinese.</span><span class="zh"><strong>不打扰模式扩展</strong> — 自动禁用的应用从 9 个增至 30 个以上：8 个终端、18+ 个编辑器和 IDE（新增全部 JetBrains IDE）、4 个密码管理器。<br><br>
+        <strong>双语 README</strong> — 文档现已提供英文和中文版本。</span></p>
+      </div>
+      <div class="feature-card">
         <div class="feature-icon">&#128230;</div>
         <h3>v0.4.0</h3>
         <p><span class="en"><strong>SQLite storage</strong> — user word frequency migrated from UserDefaults to SQLite, zero dependencies.<br><br><strong>User bigram learning</strong> — records word-to-word transitions (e.g., "thank" → "you"), ×50000 weight boost.<br><br><strong>Custom snippets</strong> — define shortcuts that expand to full text via a simple JSON file.</span><span class="zh"><strong>SQLite 存储</strong> — 用户词频从 UserDefaults 迁移到 SQLite，零第三方依赖。<br><br><strong>用户级 Bigram 学习</strong> — 记录词与词的搭配关系（如 "thank" → "you"），×50000 权重加持。<br><br><strong>自定义片语</strong> — 通过 JSON 文件定义简写 → 全文展开。</span></p>
@@ -627,7 +647,7 @@ body.lang-zh .en { display: none; }
         <span>&bull;</span>
         <span>~1 MB</span>
         <span>&bull;</span>
-        <span>v0.4.1</span>
+        <span>v0.4.2</span>
       </div>
       <div class="download-buttons">
         <a href="https://github.com/songhuiming2007-coder/SmartEnglish/releases/latest/download/SmartEnglish.pkg" class="btn btn-primary">
