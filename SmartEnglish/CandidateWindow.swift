@@ -60,7 +60,9 @@ class CandidateWindow {
         var origin = cursorRect.origin
         origin.y -= size.height + 4
 
-        if let screen = NSScreen.main {
+        // 用光标所在的屏幕做边缘裁剪（NSScreen.main 在多显示器下可能是错的屏）
+        let cursorScreen = NSScreen.screens.first { $0.frame.contains(cursorRect.origin) } ?? NSScreen.main
+        if let screen = cursorScreen {
             let frame = screen.visibleFrame
             if origin.x + size.width > frame.maxX {
                 origin.x = frame.maxX - size.width

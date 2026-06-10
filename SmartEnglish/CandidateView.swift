@@ -88,10 +88,6 @@ class CandidateView: NSView {
             totalWidth = windowHorizontalPadding * 2
         }
 
-        // chevron 右侧
-        let chevronW = ("∨" as NSString).size(withAttributes: [.font: indexFont]).width
-        totalWidth += itemGap + chevronW + windowHorizontalPadding
-
         return NSSize(width: max(totalWidth, 80), height: windowHeight)
     }
 
@@ -143,18 +139,6 @@ class CandidateView: NSView {
                 withAttributes: wordAttrs
             )
         }
-
-        // Chevron ∨
-        let chevronAttrs: [NSAttributedString.Key: Any] = [
-            .font: indexFont,
-            .foregroundColor: NSColor.secondaryLabelColor
-        ]
-        let chevronW = ("∨" as NSString).size(withAttributes: chevronAttrs).width
-        let chevronBaselineY = windowVerticalPadding + pillHeight / 2 - indexFont.ascender / 2
-        ("∨" as NSString).draw(
-            at: NSPoint(x: bounds.width - windowHorizontalPadding - chevronW, y: chevronBaselineY),
-            withAttributes: chevronAttrs
-        )
     }
 
     // MARK: - 鼠标交互

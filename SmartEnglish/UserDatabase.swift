@@ -6,6 +6,7 @@ class UserDatabase {
 
     private var db: OpaquePointer?
     private let dbPath: String
+    private var snippetsWatcher: DispatchSourceFileSystemObject?
 
     private init() {
         // 数据库路径
@@ -18,6 +19,7 @@ class UserDatabase {
         createTables()
         migrateFromUserDefaultsIfNeeded()
         syncSnippetsFromJSON()
+        watchSnippetsFile()
     }
 
     deinit {
@@ -294,11 +296,43 @@ class UserDatabase {
             return
         }
 
-        // 同步到 SQLite
+        // 同步到 SQLite（JSON 是唯一事实源：JSON 里删掉的片语也从 DB 删除）
         for (shortcut, expansion) in dict {
             setSnippet(shortcut: shortcut, expansion: expansion)
         }
+        let keep = Set(dict.keys.map { $0.lowercased() })
+        for snippet in loadAllSnippets() where !keep.contains(snippet.shortcut) {
+            deleteSnippet(snippet.shortcut)
+        }
         NSLog("SmartEnglish: Synced \(dict.count) snippets from JSON")
+    }
+
+    /// 监听 snippets.json 变化，保存后自动重新同步（不用再切换输入法）
+    private func watchSnippetsFile() {
+        let appSupport = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first!
+        let jsonPath = appSupport.appendingPathComponent("SmartEnglish/snippets.json")
+
+        let fd = open(jsonPath.path, O_EVTONLY)
+        guard fd >= 0 else { return }
+
+        // 编辑器多为原子保存（写临时文件再 rename），所以同时监听 rename/delete 并重挂 watcher
+        let source = DispatchSource.makeFileSystemObjectSource(
+            fileDescriptor: fd,
+            eventMask: [.write, .rename, .delete],
+            queue: .main
+        )
+        source.setEventHandler { [weak self] in
+            guard let self else { return }
+            self.snippetsWatcher?.cancel()
+            // 延迟一拍等保存完成，再同步并重新挂载（rename 后旧 fd 已失效）
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                self.syncSnippetsFromJSON()
+                self.watchSnippetsFile()
+            }
+        }
+        source.setCancelHandler { close(fd) }
+        source.resume()
+        snippetsWatcher = source
     }
 }
 

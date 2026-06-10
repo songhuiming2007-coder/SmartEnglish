@@ -4,6 +4,8 @@ class WordDictionary {
     static let shared = WordDictionary()
 
     private var entries: [(word: String, freq: Int)] = []
+    /// 词典词集合（O(1) 存在性检查，避免每次按键线性扫描）
+    private var dictionaryWords: Set<String> = []
     /// 内存缓存（启动时从 SQLite 加载一次）
     private var userFreqCache: [String: Int] = [:]
     private var properNouns: [String: String] = [:]  // lowercase -> standard form
@@ -47,6 +49,7 @@ class WordDictionary {
         }
 
         entries.sort { $0.freq > $1.freq }
+        dictionaryWords = Set(entries.map { $0.word })
         NSLog("SmartEnglish: Loaded \(entries.count) words")
     }
 
@@ -64,6 +67,15 @@ class WordDictionary {
             remainingLimit -= 1
         }
 
+        // 撇号前缀（can'、I'）：词典词不含撇号，直接匹配缩写展开形式
+        if prefix.contains("'") {
+            let expansions = contractions.values
+                .filter { $0.lowercased().hasPrefix(prefix) && !result.contains($0) }
+                .sorted { $0.count < $1.count }
+            result.append(contentsOf: expansions.prefix(remainingLimit))
+            return result
+        }
+
         var matches: [(word: String, score: Double)] = []
         var exactMatch = false
 
@@ -75,20 +87,27 @@ class WordDictionary {
                 continue
             }
 
-            let userBoost = Double(userFreqCache[entry.word] ?? 0) * 5000.0
-            var score = Double(entry.freq) + userBoost
+            // 对数评分：词典频率是语料原始计数（最高 ~10^10），线性加权时
+            // 用户信号（×5000）永远追不上词典频率，学习形同虚设。
+            // log10 后频率差距压缩到 0~10 分，用户信号才能真正参与排名：
+            //   选 1 次 ≈ 5 倍频率优势，5 次 ≈ 3000 倍，封顶 10 次
+            var score = log10(Double(entry.freq) + 1)
 
-            // bigram 加权：如果前一个词已知，给匹配的下一个词强力 boost
+            // 用户词频：最强的个人习惯信号，封顶防止单词霸榜
+            let userFreq = Double(userFreqCache[entry.word] ?? 0)
+            score += min(userFreq, 10.0) * 0.7
+
+            // 公共语料 bigram：温和的上下文信号
             if !lastWord.isEmpty, let nextWords = bigrams[lastWord],
                let bigramFreq = nextWords[entry.word] {
-                score += Double(bigramFreq) * 100.0
+                score += log10(Double(bigramFreq) + 1) * 0.3
             }
 
-            // 用户级 bigram 加权（权重远高于公共 bigram：×50000 vs ×100）
+            // 用户级 bigram：个人搭配习惯，强于公共语料
             if !lastWord.isEmpty {
                 let userBigrams = getUserBigramsForCurrentContext()
                 if let userBigramFreq = userBigrams[entry.word] {
-                    score += Double(userBigramFreq) * 50000.0
+                    score += min(Double(userBigramFreq), 10.0) * 1.0
                 }
             }
 
@@ -112,7 +131,7 @@ class WordDictionary {
         if prefix.count >= 3 {
             for key in properNouns.keys {
                 guard key.hasPrefix(prefix) && !result.contains(key) else { continue }
-                if !entries.contains(where: { $0.word == key }) {
+                if !dictionaryWords.contains(key) {
                     result.append(key)
                     if result.count >= limit { break }
                 }
@@ -140,10 +159,11 @@ class WordDictionary {
 
     // MARK: - 用户学习
 
-    func recordSelection(word: String) {
+    /// weight：主动选择（数字键/鼠标/方向键）= 2，默认接受（空格/Tab 选第一个）= 1
+    func recordSelection(word: String, weight: Int = 1) {
         let cleanWord = word.lowercased()
-        userFreqCache[cleanWord, default: 0] += 1
-        UserDatabase.shared.recordWordSelection(word: cleanWord)
+        userFreqCache[cleanWord, default: 0] += weight
+        UserDatabase.shared.recordWordSelection(word: cleanWord, increment: weight)
 
         // 记录用户级 bigram
         if !lastWord.isEmpty {

@@ -13,12 +13,20 @@ class SmartEnglishInputController: IMKInputController {
     private var lastCommittedText: String = ""
     /// 最近一次字母键按下时 Caps Lock 是否亮灯（用于消歧单个大写字母：Shift→Hello，Caps Lock→HELLO）
     private var capsLockOn: Bool = false
+    /// 上一次提交是否以自动空格结尾（智能空格：紧跟的标点会吞掉这个空格）
+    private var pendingAutoSpace: Bool = false
+    /// 当前词起始位置是否为句首（词首字母按下时从真实文档上下文捕获）
+    private var sentenceStart: Bool = true
+    /// 会触发智能空格回退的标点（出现在自动空格后时，标点前移吞掉空格）
+    private static let smartPunctuation: Set<Character> = [".", ",", "?", "!", ";", ":", ")", "]", "}"]
 
     // ==================== 生命周期 ====================
 
     override func activateServer(_ sender: Any!) {
         super.activateServer(sender)
         shouldCapitalizeNext = true
+        sentenceStart = true
+        pendingAutoSpace = false
         reset()
 
         // 接线：鼠标点击候选词
@@ -78,6 +86,19 @@ class SmartEnglishInputController: IMKInputController {
         "com.bitwarden.desktop",
     ]
 
+    /// 用户自定义 DND 应用列表（~/Library/Application Support/SmartEnglish/blocked_apps.json，
+    /// 内容为 bundle ID 字符串数组；修改后需切换一次输入法生效）
+    private static let userBlockedApps: Set<String> = {
+        let url = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask)
+            .first!.appendingPathComponent("SmartEnglish/blocked_apps.json")
+        guard let data = try? Data(contentsOf: url),
+              let list = try? JSONSerialization.jsonObject(with: data) as? [String] else {
+            return []
+        }
+        NSLog("SmartEnglish: Loaded \(list.count) user-blocked apps")
+        return Set(list)
+    }()
+
     private func shouldDisableInContext(client: IMKTextInput) -> Bool {
         // 1. 检查输入字段属性（部分应用会标记密码字段）
         var rect = NSRect.zero
@@ -87,13 +108,41 @@ class SmartEnglishInputController: IMKInputController {
             return true
         }
 
-        // 2. 检查特定应用（终端、密码管理器等）
+        // 2. 检查特定应用（终端、密码管理器等）+ 用户自定义列表
         let bundleId = client.bundleIdentifier() ?? ""
-        if SmartEnglishInputController.blockedApps.contains(bundleId) {
+        if SmartEnglishInputController.blockedApps.contains(bundleId) ||
+           SmartEnglishInputController.userBlockedApps.contains(bundleId) {
             return true
         }
 
         return false
+    }
+
+    // ==================== 输入法菜单 ====================
+
+    override func menu() -> NSMenu! {
+        let menu = NSMenu()
+
+        let snippets = NSMenuItem(title: "Edit Snippets…", action: #selector(openSnippetsFile(_:)), keyEquivalent: "")
+        snippets.target = self
+        menu.addItem(snippets)
+
+        let updates = NSMenuItem(title: "Check for Updates…", action: #selector(checkForUpdates(_:)), keyEquivalent: "")
+        updates.target = self
+        menu.addItem(updates)
+
+        return menu
+    }
+
+    @objc private func openSnippetsFile(_ sender: Any?) {
+        let url = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask)
+            .first!.appendingPathComponent("SmartEnglish/snippets.json")
+        NSWorkspace.shared.open(url)
+    }
+
+    /// 只打开 Releases 页面，不做任何后台网络请求（隐私承诺：应用本身零联网）
+    @objc private func checkForUpdates(_ sender: Any?) {
+        NSWorkspace.shared.open(URL(string: "https://github.com/songhuiming2007-coder/SmartEnglish/releases/latest")!)
     }
 
     // ==================== 按键处理 ====================
@@ -122,10 +171,25 @@ class SmartEnglishInputController: IMKInputController {
             return false
         }
 
+        // 自动空格标记：只对紧随其后的标点键生效，任何其他按键都清除
+        let hadAutoSpace = pendingAutoSpace
+        pendingAutoSpace = false
 
         // 字母键 a-z / A-Z
         if let char = chars.first, char.isLetter && char.isASCII {
             capsLockOn = event.modifierFlags.contains(.capsLock)
+            if composingText.isEmpty {
+                // 词首：读真实文档上下文判断句首（点击换位、切输入框、Enter 换行都准确）
+                sentenceStart = sentenceStartFromContext(client) ?? shouldCapitalizeNext
+            }
+            composingText.append(char)
+            updateMarkedText(client)
+            updateCandidates(client)
+            return true
+        }
+
+        // 词中撇号：并入 composing，支持直接打 can't、I'm 等缩写
+        if let char = chars.first, char == "'", !composingText.isEmpty {
             composingText.append(char)
             updateMarkedText(client)
             updateCandidates(client)
@@ -139,7 +203,7 @@ class SmartEnglishInputController: IMKInputController {
                 if !candidates.isEmpty && char >= "1" && char <= "9" {
                     let index = Int(String(char))! - 1
                     if index < candidates.count {
-                        selectCandidate(at: index, client: client)
+                        selectCandidate(at: index, client: client, explicit: true)
                         return true
                     }
                 }
@@ -171,28 +235,29 @@ class SmartEnglishInputController: IMKInputController {
             if !composingText.isEmpty {
                 if !candidates.isEmpty {
                     let index = min(candidateWindow.selectedIndex, candidates.count - 1)
-                    selectCandidate(at: index, client: client)
-                } else {
-                    commitComposing(client)
+                    // 移动过高亮 = 主动选择；停在首位 = 默认接受
+                    selectCandidate(at: index, client: client, explicit: index != 0)
+                    return true
                 }
-                return true
-            }
-            return false
-        }
-
-        // Enter：上屏原始输入
-        if keyCode == 36 {
-            if !composingText.isEmpty {
+                // 无候选词：上屏原文，空格本身透传（否则空格被吞）
                 commitComposing(client)
-                return true
+                return false
             }
             return false
         }
 
-        // Tab：选中第一个候选词
+        // Enter：上屏原始输入；换行后下一词按句首处理（fallback 状态）
+        if keyCode == 36 {
+            let hadComposing = !composingText.isEmpty
+            if hadComposing { commitComposing(client) }
+            shouldCapitalizeNext = true
+            return hadComposing
+        }
+
+        // Tab：接受第一个候选词（默认接受，学习权重低于主动选择）
         if keyCode == 48 {
             if !composingText.isEmpty && !candidates.isEmpty {
-                selectCandidate(at: 0, client: client)
+                selectCandidate(at: 0, client: client, explicit: false)
                 return true
             }
             return false
@@ -215,6 +280,23 @@ class SmartEnglishInputController: IMKInputController {
                 return true
             }
             return false
+        }
+
+        // 智能空格：选词自动加的空格后紧跟标点 → 标点前移吞掉空格（"hello ." → "hello. "）
+        if hadAutoSpace, composingText.isEmpty, let ch = chars.first,
+           SmartEnglishInputController.smartPunctuation.contains(ch) {
+            let sel = client.selectedRange()
+            if sel.location != NSNotFound, sel.location > 0,
+               let before = client.attributedSubstring(from: NSRange(location: sel.location - 1, length: 1))?.string,
+               before == " " {
+                client.insertText(
+                    "\(ch) ",
+                    replacementRange: NSRange(location: sel.location - 1, length: 1)
+                )
+                pendingAutoSpace = true  // 重新加的空格也是自动空格，标点可连打（"word!?"）
+                shouldCapitalizeNext = "?!.".contains(ch)
+                return true
+            }
         }
 
         // 其他字符（标点等）：先上屏当前文本，再透传
@@ -263,6 +345,28 @@ class SmartEnglishInputController: IMKInputController {
         }
     }
 
+    /// 从真实文档读取光标前文本判断句首；客户端不支持时返回 nil（调用方退回内部状态）
+    /// 只在 composing 为空时调用（marked text 激活期间光标前是 composing 内容，会误判）
+    private func sentenceStartFromContext(_ client: IMKTextInput) -> Bool? {
+        let sel = client.selectedRange()
+        guard sel.location != NSNotFound else { return nil }
+        if sel.location == 0 { return true }
+
+        let len = min(16, sel.location)
+        guard let text = client.attributedSubstring(
+            from: NSRange(location: sel.location - len, length: len)
+        )?.string, !text.isEmpty else { return nil }
+
+        for ch in text.reversed() {
+            if ch == " " || ch == "\t" { continue }
+            if ch == "\n" || ch == "\r" { return true }
+            if ch == "." || ch == "?" || ch == "!" { return true }
+            return false
+        }
+        // 窗口内全是空白：到达文档头则是句首，否则看不到更早内容，放弃判断
+        return sel.location - len == 0 ? true : nil
+    }
+
     private func applyCasing(to word: String, composingText: String, client: IMKTextInput) -> String {
         let pattern = detectCasingPattern(composingText)
 
@@ -275,7 +379,7 @@ class SmartEnglishInputController: IMKInputController {
 
         case .allLowercase:
             // 句首大写 > 原样（专有名词已由候选列表注入，不再在这里强制转换）
-            if shouldCapitalizeNext {
+            if sentenceStart {
                 return word.prefix(1).uppercased() + word.dropFirst()
             }
             return word
@@ -316,21 +420,28 @@ class SmartEnglishInputController: IMKInputController {
         let snippetAtZero = dictionary.getSnippet(for: composingText.lowercased()) != nil
         var pairs: [(raw: String, display: String)] = []
 
+        let casing = detectCasingPattern(composingText)
         for (i, raw) in rawList.enumerated() {
             let isSnippet = (i == 0 && snippetAtZero)
             let display: String
             if isSnippet {
                 display = raw
-            } else if shouldCapitalizeNext {
-                display = raw.prefix(1).uppercased() + raw.dropFirst()
             } else {
-                display = raw
+                // 预览最终上屏形式（所见即所得：打 "Hel" 显示 "Hello" 而不是 "hello"）
+                switch casing {
+                case .allUppercase:
+                    display = raw.uppercased()
+                case .firstUppercase:
+                    display = raw.prefix(1).uppercased() + raw.dropFirst()
+                case .allLowercase:
+                    display = sentenceStart ? raw.prefix(1).uppercased() + raw.dropFirst() : raw
+                }
             }
             if !isSnippet, let properForm = dictionary.properNounForm(for: raw),
                properForm != display {
                 let properHasLowercase = properForm.contains(where: { $0.isLowercase })
-                if properHasLowercase {
-                    // 混合大小写（Mac、iPhone）：直接替换小写版，不显示小写
+                if properHasLowercase || raw == "i" {
+                    // 混合大小写（Mac、iPhone）和裸 i：直接替换，小写形式不是合法写法
                     pairs.append((raw: properForm, display: properForm))
                 } else {
                     // 纯大写（IT、IP）：两个都显示，小写在前
@@ -353,16 +464,7 @@ class SmartEnglishInputController: IMKInputController {
         candidateWindow.show(candidates: displayCandidates, cursorRect: cursorRect)
     }
 
-    /// 对候选词列表首字母大写（跳过首位片语）
-    private func applyCapitalization(to words: [String], snippetAtZero: Bool = false) -> [String] {
-        return words.enumerated().map { i, word in
-            // 跳过首位的片语展开文本
-            if i == 0 && snippetAtZero { return word }
-            return word.prefix(1).uppercased() + word.dropFirst()
-        }
-    }
-
-    private func selectCandidate(at index: Int, client: IMKTextInput) {
+    private func selectCandidate(at index: Int, client: IMKTextInput, explicit: Bool = true) {
         guard index < candidates.count else { return }
         let rawWord = candidates[index]
 
@@ -373,6 +475,7 @@ class SmartEnglishInputController: IMKInputController {
                 replacementRange: NSRange(location: NSNotFound, length: NSNotFound)
             )
             updateCapitalizationState(committedText: rawWord + " ")
+            pendingAutoSpace = true
             reset()
             candidateWindow.hide()
             return
@@ -392,9 +495,11 @@ class SmartEnglishInputController: IMKInputController {
             replacementRange: NSRange(location: NSNotFound, length: NSNotFound)
         )
 
-        dictionary.recordSelection(word: rawWord)
+        // 主动选择（数字键/鼠标/移动过高亮）权重 2，默认接受（空格/Tab 选首位）权重 1
+        dictionary.recordSelection(word: rawWord, weight: explicit ? 2 : 1)
         dictionary.setLastWord(rawWord)
         updateCapitalizationState(committedText: finalWord + " ")
+        pendingAutoSpace = true
         reset()
         candidateWindow.hide()
     }
@@ -406,6 +511,7 @@ class SmartEnglishInputController: IMKInputController {
             replacementRange: NSRange(location: NSNotFound, length: NSNotFound)
         )
         updateCapitalizationState(committedText: composingText)
+        pendingAutoSpace = false
         reset()
         candidateWindow.hide()
     }
