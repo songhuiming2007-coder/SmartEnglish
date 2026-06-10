@@ -70,6 +70,7 @@ macOS 默认阻止未签名应用。打开终端运行上述命令，然后在�
 | Key | Action |
 |-----|--------|
 | a-z | Type letters, show candidates |
+| ' (mid-word) | Continue the word — type can't, I'm directly |
 | 1-9 | Select candidate by number |
 | ← → | Move selection highlight |
 | Space | Accept selected candidate |
@@ -77,7 +78,7 @@ macOS 默认阻止未签名应用。打开终端运行上述命令，然后在�
 | Enter | Commit raw text (skip candidates) |
 | Backspace | Delete last character |
 | Escape | Cancel input |
-| Punctuation | Commit current text, then output symbol |
+| Punctuation | Commit current text, then output symbol; right after a word's auto-space it tucks in before the space ("hello ." → "hello. ") |
 | Mouse hover | Highlight candidate |
 | Mouse click | Select candidate |
 
@@ -98,6 +99,10 @@ SmartEnglish 在终端和编辑器中自动禁用，按键直接透传。
 Password fields in other apps are also auto-detected and blocked.
 
 其他应用中的密码输入框也会被自动检测并禁用。
+
+**Add your own apps:** create `~/Library/Application Support/SmartEnglish/blocked_apps.json` with an array of bundle IDs, e.g. `["com.example.app"]`. Switch input source once to apply.
+
+**自定义禁用列表**：在 `~/Library/Application Support/SmartEnglish/blocked_apps.json` 写入 bundle ID 数组即可，切换一次输入法生效。
 
 ---
 
@@ -125,11 +130,11 @@ Define your own shortcuts that expand to full text. For example:
 }
 ```
 
-4. Save, switch input method to refresh
+4. Save — changes apply immediately, no need to switch input source
 
-Snippets appear at the top of the candidate list with highest priority.
+Snippets appear at the top of the candidate list with highest priority. You can also open the file from the input method menu (menu bar icon → Edit Snippets…).
 
-片语在候选词中拥有最高优先级。
+保存即生效，无需切换输入法。也可以从输入法菜单（菜单栏图标 → Edit Snippets…）直接打开该文件。片语在候选词中拥有最高优先级。
 
 ---
 
