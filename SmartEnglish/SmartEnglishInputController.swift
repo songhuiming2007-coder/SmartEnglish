@@ -166,11 +166,12 @@ class SmartEnglishInputController: IMKInputController {
             return false
         }
 
-        // Space
+        // Space：选中当前高亮候选词（方向键/鼠标悬停可移动高亮，默认为 0）
         if keyCode == 49 {
             if !composingText.isEmpty {
                 if !candidates.isEmpty {
-                    selectCandidate(at: 0, client: client)
+                    let index = min(candidateWindow.selectedIndex, candidates.count - 1)
+                    selectCandidate(at: index, client: client)
                 } else {
                     commitComposing(client)
                 }
