@@ -11,6 +11,8 @@ class SmartEnglishInputController: IMKInputController {
     private lazy var candidateWindow = CandidateWindow.shared
     private var shouldCapitalizeNext: Bool = true
     private var lastCommittedText: String = ""
+    /// 最近一次字母键按下时 Caps Lock 是否亮灯（用于消歧单个大写字母：Shift→Hello，Caps Lock→HELLO）
+    private var capsLockOn: Bool = false
 
     // ==================== 生命周期 ====================
 
@@ -123,6 +125,7 @@ class SmartEnglishInputController: IMKInputController {
 
         // 字母键 a-z / A-Z
         if let char = chars.first, char.isLetter && char.isASCII {
+            capsLockOn = event.modifierFlags.contains(.capsLock)
             composingText.append(char)
             updateMarkedText(client)
             updateCandidates(client)
@@ -240,6 +243,10 @@ class SmartEnglishInputController: IMKInputController {
 
         if first.isUppercase {
             if !hasLower {
+                // 单个大写字母有歧义：Caps Lock 亮灯 → 全大写；Shift 打出的 → 首字母大写
+                if text.count == 1 {
+                    return capsLockOn ? .allUppercase : .firstUppercase
+                }
                 return .allUppercase
             }
             let rest = text.dropFirst()
