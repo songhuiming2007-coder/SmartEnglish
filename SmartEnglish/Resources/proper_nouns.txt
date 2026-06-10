@@ -598,6 +598,7 @@ MIT
 ML
 MLB
 MSc
+Mac
 MacBook
 Macron
 Macworld

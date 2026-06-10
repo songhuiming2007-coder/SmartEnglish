@@ -108,6 +108,17 @@ class WordDictionary {
             if result.count > limit { result.removeLast() }
         }
 
+        // 专有名词前缀补全：prefix >= 3 时，把 words.txt 里没有的专有名词 key 补进来
+        if prefix.count >= 3 {
+            for key in properNouns.keys {
+                guard key.hasPrefix(prefix) && !result.contains(key) else { continue }
+                if !entries.contains(where: { $0.word == key }) {
+                    result.append(key)
+                    if result.count >= limit { break }
+                }
+            }
+        }
+
         // 缩写补全：输入完全匹配 contraction key 时处理
         if let contraction = contractions[prefix.lowercased()] {
             if ambiguousContractions.contains(prefix.lowercased()) {

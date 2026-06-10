@@ -318,13 +318,19 @@ class SmartEnglishInputController: IMKInputController {
             } else {
                 display = raw
             }
-            pairs.append((raw, display))
-
-            // 注入专有名词变体（跳过首位片语）
             if !isSnippet, let properForm = dictionary.properNounForm(for: raw),
                properForm != display {
-                // raw = properForm，这样 selectCandidate 直接上屏正确形式
-                pairs.append((raw: properForm, display: properForm))
+                let properHasLowercase = properForm.contains(where: { $0.isLowercase })
+                if properHasLowercase {
+                    // 混合大小写（Mac、iPhone）：直接替换小写版，不显示小写
+                    pairs.append((raw: properForm, display: properForm))
+                } else {
+                    // 纯大写（IT、IP）：两个都显示，小写在前
+                    pairs.append((raw, display))
+                    pairs.append((raw: properForm, display: properForm))
+                }
+            } else {
+                pairs.append((raw, display))
             }
         }
 
