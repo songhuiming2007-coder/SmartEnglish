@@ -294,7 +294,7 @@ body.lang-zh .en { display: none; }
   <div class="container">
     <div class="hero-badge">
       <span class="dot"></span>
-      <span data-en="v0.4.3 — SQLite, bigram learning, custom snippets, DND for 30+ apps" data-zh="v0.4.3 — SQLite 存储、bigram 学习、自定义片语、30+ 应用不打扰">v0.4.3 — SQLite, bigram learning, custom snippets, DND for 30+ apps</span>
+      <span data-en="v0.4.4 — smart spacing, contractions, smarter learning, custom snippets, DND for 30+ apps" data-zh="v0.4.4 — 智能空格、缩写直输、更聪明的学习、自定义片语、30+ 应用不打扰">v0.4.4 — smart spacing, contractions, smarter learning, custom snippets, DND for 30+ apps</span>
     </div>
     <h1>
       <span class="dim"><span class="en">iPhone-style</span><span class="zh">iPhone 式</span></span><br>
@@ -486,6 +486,23 @@ body.lang-zh .en { display: none; }
     <div class="section-desc"><span class="en">SmartEnglish is actively developed. Here's a summary of every release.</span><span class="zh">SmartEnglish 持续迭代中，以下是每个版本的更新摘要。</span></div>
     <div class="features-grid">
       <div class="feature-card">
+        <div class="feature-icon">&#10024;</div>
+        <h3>v0.4.4</h3>
+        <p><span class="en"><strong>Input polish &amp; smarter learning</strong><br><br>
+        <strong>Smart spacing</strong> — punctuation typed right after a selected word tucks in before the auto-space ("hello ." → "hello. ").<br><br>
+        <strong>Type contractions directly</strong> — mid-word apostrophe no longer breaks input; can't, I'm, won't compose naturally.<br><br>
+        <strong>Context-aware capitalization</strong> — sentence-start detection reads the actual text around the cursor; clicking mid-sentence or pressing Enter capitalizes correctly.<br><br>
+        <strong>WYSIWYG candidates</strong> — the window shows the exact form that will be committed ("Hel" shows "Hello").<br><br>
+        <strong>Smarter learning</strong> — log-scale ranking makes your habits actually matter; deliberate picks weigh double vs. accepting the default.<br><br>
+        <strong>Quality of life</strong> — snippets hot reload, custom DND list via blocked_apps.json, input method menu (Edit Snippets / Check for Updates), multi-display fix, faster proper noun completion, bare "i" commits "I".</span><span class="zh"><strong>输入打磨 &amp; 更聪明的学习</strong><br><br>
+        <strong>智能空格</strong> — 选词后紧跟的标点自动吞掉空格（"hello ." → "hello. "）。<br><br>
+        <strong>缩写直输</strong> — 词中撇号不再打断输入，can't、I'm、won't 直接打。<br><br>
+        <strong>上下文感知大写</strong> — 句首判断读取光标周围的真实文本，点到句中、按回车换行都能正确大写。<br><br>
+        <strong>所见即所得</strong> — 候选窗显示的就是最终上屏的形式（打 "Hel" 显示 "Hello"）。<br><br>
+        <strong>更聪明的学习</strong> — 对数评分让个人习惯真正参与排名；主动选择的学习权重是默认接受的两倍。<br><br>
+        <strong>体验细节</strong> — 片语保存即生效、blocked_apps.json 自定义禁用列表、输入法菜单（编辑片语/检查更新）、多显示器修复、专有名词补全提速、裸 "i" 上屏 "I"。</span></p>
+      </div>
+      <div class="feature-card">
         <div class="feature-icon">&#128296;</div>
         <h3>v0.4.3</h3>
         <p><span class="en"><strong>Bug fix release</strong><br><br>
@@ -668,7 +685,7 @@ body.lang-zh .en { display: none; }
         <span>&bull;</span>
         <span>~1 MB</span>
         <span>&bull;</span>
-        <span>v0.4.3</span>
+        <span>v0.4.4</span>
       </div>
       <div class="download-buttons">
         <a href="https://github.com/songhuiming2007-coder/SmartEnglish/releases/latest/download/SmartEnglish.pkg" class="btn btn-primary">

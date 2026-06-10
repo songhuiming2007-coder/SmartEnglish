@@ -140,6 +140,19 @@ Snippets appear at the top of the candidate list with highest priority. You can 
 
 ## Version History
 
+### v0.4.4
+- **Smart spacing** — punctuation typed right after a selected word tucks in before the auto-space ("hello ." → "hello. "), chains for "word!?"
+- **Type contractions directly** — mid-word apostrophe no longer breaks input; can't, I'm, won't compose naturally
+- **Context-aware capitalization** — sentence-start detection reads the actual text around the cursor; clicking mid-sentence, pressing Enter, or switching fields all capitalize correctly
+- **WYSIWYG candidates** — the window shows the exact form that will be committed ("Hel" shows "Hello", not "hello")
+- **Bare "i" commits "I"**
+- **Smarter learning** — log-scale ranking makes your habits actually matter (the old linear weights were drowned out by dictionary counts); deliberate picks (number keys / mouse) weigh double vs. accepting the default
+- **Faster proper noun completion** — O(1) lookup replaces a per-keystroke linear scan
+- **Multi-display fix** — candidate window clamps to the screen the cursor is on
+- **Snippets hot reload** — saving snippets.json applies immediately
+- **Custom DND list** — add your own apps via `blocked_apps.json`
+- **Input method menu** — Edit Snippets… and Check for Updates… (opens the releases page in your browser; the app itself still makes zero network requests)
+
 ### v0.4.3
 - **Candidate window above save dialogs** — raised window level so system save panels no longer cover it
 - **Space commits the highlighted candidate** — arrow keys / mouse hover move the highlight, Space now respects it (Tab still picks the first)
