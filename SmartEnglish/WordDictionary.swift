@@ -122,10 +122,11 @@ class WordDictionary {
         // 缩写补全：输入完全匹配 contraction key 时处理
         if let contraction = contractions[prefix.lowercased()] {
             if ambiguousContractions.contains(prefix.lowercased()) {
-                // 歧义词：有空位才加入，不强制首位，不挤掉已有候选词
-                if !result.contains(contraction) && result.count < limit {
-                    result.append(contraction)
-                }
+                // 歧义词：固定插在原词之后（保证可见，不抢首位）
+                // 旧逻辑"有空位才追加"会被前缀匹配填满的列表永久挤掉（如 cant → can't）
+                result.removeAll { $0 == contraction }
+                result.insert(contraction, at: min(insertPos + 1, result.count))
+                if result.count > limit { result.removeLast() }
             } else {
                 // 无歧义：放首位（但片语之后）
                 result.removeAll { $0 == contraction }

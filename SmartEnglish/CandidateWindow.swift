@@ -30,7 +30,8 @@ class CandidateWindow {
             backing: .buffered,
             defer: true
         )
-        panel.level = .popUpMenu
+        // .screenSaver 高于沙盒应用保存面板（openAndSavePanelService 渲染，层级高于 .popUpMenu）
+        panel.level = .screenSaver
         panel.isFloatingPanel = true
         panel.hidesOnDeactivate = false
         panel.hasShadow = true
@@ -73,7 +74,7 @@ class CandidateWindow {
         }
 
         panel.setFrameOrigin(origin)
-        panel.orderFront(nil)
+        panel.orderFrontRegardless()
         panel.invalidateShadow()
     }
 

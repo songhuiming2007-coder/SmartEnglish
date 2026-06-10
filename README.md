@@ -6,6 +6,20 @@ macOS 英文预测输入法。输入几个字母，选择单词。免费开源�
 
 ---
 
+## Privacy & Security · 隐私与安全
+
+An input method can see every keystroke you type — so you deserve to know exactly what SmartEnglish does with them:
+
+输入法能看到你敲下的每一个键，所以你有权知道 SmartEnglish 拿它们做了什么：
+
+- **100% offline.** The source code contains zero networking calls — no telemetry, no analytics, no cloud sync. Your keystrokes never leave your Mac. **完全离线**，源码中没有任何网络请求代码，不联网、无遥测、无统计上报。
+- **All data stays local.** Word frequency and snippets are stored in a local SQLite database. You can inspect it yourself: `~/Library/Application Support/SmartEnglish/userdata.sqlite`. **数据只存本地**，词频和片语保存在本地 SQLite 数据库，你可以随时自行查看。
+- **Password fields are never recorded.** Secure text fields are auto-detected and SmartEnglish steps aside entirely (see DND Mode below). **密码框自动禁用**，安全输入框会被自动识别，输入法完全放行、不记录。
+- **Open source (MIT).** Every line of code is auditable. Don't trust — verify. **MIT 开源**，每一行代码都可审查，不必信任，可以验证。
+- **Uninstall = clean removal.** Delete the app and the data folder above, and nothing remains. **卸载即彻底清除**，删掉应用和上述数据目录即可，不留任何残余。
+
+---
+
 ## Download & Install
 
 ### Step 1: Allow apps from anywhere
