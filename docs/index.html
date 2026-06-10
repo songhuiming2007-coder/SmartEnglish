@@ -338,7 +338,7 @@ body.lang-zh .en { display: none; }
   <div class="container">
     <div class="section-label" data-en="Features" data-zh="功能">Features</div>
     <div class="section-title"><span class="en">Everything you need,<br>nothing you don't.</span><span class="zh">你需要的全都有，不需要的全没有。</span></div>
-    <div class="section-desc"><span class="en">A minimal, fast, privacy-first predictive text engine for macOS &mdash; now with smart casing and proper noun support.</span><span class="zh">一个极简、快速、隐私优先的 macOS 联想输入引擎 &mdash; 现已支持智能大小写和专有名词。</span></div>
+    <div class="section-desc"><span class="en">A minimal, fast, privacy-first predictive text engine for macOS — smart casing, proper nouns, contractions, DND mode, custom snippets, and a learning engine that actually works.</span><span class="zh">极简、快速、隐私优先的 macOS 联想输入引擎 — 智能大小写、专有名词、缩写直打、不打扰模式、自定义片语，以及真正有效的学习引擎。</span></div>
     <div class="features-grid">
       <div class="feature-card">
         <div class="feature-icon">&#9889;</div>
@@ -353,7 +353,7 @@ body.lang-zh .en { display: none; }
       <div class="feature-card">
         <div class="feature-icon">&#129504;</div>
         <h3 data-en="Learns from you" data-zh="越用越懂你">Learns from you</h3>
-        <p><span class="en">SmartEnglish remembers your word choices and boosts them in future suggestions. Gets better the more you use it.</span><span class="zh">SmartEnglish 记住你的用词偏好，在后续推荐中优先显示。用得越多，越好用。</span></p>
+        <p><span class="en">SmartEnglish remembers your word choices and boosts them in future suggestions. Log-scale ranking ensures your habits actually compete with dictionary frequencies — not drowned out by billion-count corpus entries. It also records word-to-word transitions: type "thank" and "you" rises to the top. Deliberate picks (number keys, mouse) count double.</span><span class="zh">记住你的用词偏好并在后续推荐中优先显示。对数评分让个人习惯真正参与排名——不会被词典中数十亿次的高频词淹没。同时记录词与词的搭配：打完 "thank"，"you" 会升到首位。主动选择（数字键/鼠标）的学习权重是默认接受的两倍。</span></p>
       </div>
       <div class="feature-card">
         <div class="feature-icon">&#127919;</div>
@@ -373,7 +373,7 @@ body.lang-zh .en { display: none; }
       <div class="feature-card">
         <div class="feature-icon">&#9997;&#65039;</div>
         <h3 data-en="Smart casing" data-zh="智能大小写">Smart casing</h3>
-        <p><span class="en">Input case is preserved in output. Type <code style="font-family:var(--mono);font-size:13px;background:var(--bg);padding:1px 6px;border-radius:4px;">ENG</code> and get <strong>ENGLAND</strong>, type <code style="font-family:var(--mono);font-size:13px;background:var(--bg);padding:1px 6px;border-radius:4px;">Eng</code> and get <strong>England</strong>. No manual shifting needed.</span><span class="zh">输入大小写会保留在输出中。输入 <code style="font-family:var(--mono);font-size:13px;background:var(--bg);padding:1px 6px;border-radius:4px;">ENG</code> 得到 <strong>ENGLAND</strong>，输入 <code style="font-family:var(--mono);font-size:13px;background:var(--bg);padding:1px 6px;border-radius:4px;">Eng</code> 得到 <strong>England</strong>。无需手动切换大小写。</span></p>
+        <p><span class="en">Input case maps to output: <code style="font-family:var(--mono);font-size:13px;background:var(--bg);padding:1px 6px;border-radius:4px;">ENG</code> → <strong>ENGLAND</strong>, <code style="font-family:var(--mono);font-size:13px;background:var(--bg);padding:1px 6px;border-radius:4px;">Eng</code> → <strong>England</strong>. Sentence-start detection reads the actual text around the cursor — click mid-sentence or press Enter and capitalization still works correctly. Caps Lock is distinguished from Shift for single letters. The candidate window shows the exact form that will be committed (WYSIWYG).</span><span class="zh">输入大小写映射到输出：<code style="font-family:var(--mono);font-size:13px;background:var(--bg);padding:1px 6px;border-radius:4px;">ENG</code> → <strong>ENGLAND</strong>，<code style="font-family:var(--mono);font-size:13px;background:var(--bg);padding:1px 6px;border-radius:4px;">Eng</code> → <strong>England</strong>。句首判断读取光标周围的真实文字——鼠标点到句子中间、按回车换行后大写都能判断准确。Shift 和 Caps Lock 对单字母的行为有所区分。候选窗显示的就是最终上屏的形式（所见即所得）。</span></p>
       </div>
       <div class="feature-card">
         <div class="feature-icon">&#127758;</div>
@@ -383,7 +383,17 @@ body.lang-zh .en { display: none; }
       <div class="feature-card">
         <div class="feature-icon">&#128221;</div>
         <h3 data-en="Custom snippets" data-zh="自定义片语">Custom snippets</h3>
-        <p><span class="en">Define your own shortcuts &mdash; type <code style="font-family:var(--mono);font-size:13px;background:var(--bg);padding:1px 6px;border-radius:4px;">addr</code> and get your full address, or <code style="font-family:var(--mono);font-size:13px;background:var(--bg);padding:1px 6px;border-radius:4px;">sig</code> for your email signature. Managed via a simple JSON file.</span><span class="zh">定义你自己的快捷方式 &mdash; 输入 <code style="font-family:var(--mono);font-size:13px;background:var(--bg);padding:1px 6px;border-radius:4px;">addr</code> 展开完整地址，或 <code style="font-family:var(--mono);font-size:13px;background:var(--bg);padding:1px 6px;border-radius:4px;">sig</code> 展开邮件签名。通过简单的 JSON 文件管理。</span></p>
+        <p><span class="en">Define your own shortcuts &mdash; type <code style="font-family:var(--mono);font-size:13px;background:var(--bg);padding:1px 6px;border-radius:4px;">addr</code> and get your full address, or <code style="font-family:var(--mono);font-size:13px;background:var(--bg);padding:1px 6px;border-radius:4px;">sig</code> for your email signature. Managed via a simple JSON file. Save the file and changes apply immediately &mdash; no need to switch input sources.</span><span class="zh">定义你自己的快捷方式 &mdash; 输入 <code style="font-family:var(--mono);font-size:13px;background:var(--bg);padding:1px 6px;border-radius:4px;">addr</code> 展开完整地址，或 <code style="font-family:var(--mono);font-size:13px;background:var(--bg);padding:1px 6px;border-radius:4px;">sig</code> 展开邮件签名。通过 JSON 文件管理，保存即生效，无需切换输入法。</span></p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">&#128683;</div>
+        <h3 data-en="DND mode" data-zh="不打扰模式">DND mode</h3>
+        <p><span class="en">SmartEnglish auto-disables in terminals, editors, and password managers — keystrokes pass through directly, no candidate window, no interference. 30+ apps covered out of the box (Terminal, iTerm2, VS Code, all JetBrains IDEs, 1Password, and more). Password fields in other apps are also auto-detected. Add your own apps via <code style="font-family:var(--mono);font-size:13px;background:var(--bg);padding:1px 6px;border-radius:4px;">blocked_apps.json</code>.</span><span class="zh">SmartEnglish 在终端、编辑器和密码管理器中自动禁用——按键直接透传，不弹候选窗，零干扰。内置覆盖 30+ 应用（Terminal、iTerm2、VS Code、全部 JetBrains IDE、1Password 等）。其他应用的密码框也会被自动识别。可通过 <code style="font-family:var(--mono);font-size:13px;background:var(--bg);padding:1px 6px;border-radius:4px;">blocked_apps.json</code> 添加自定义应用。</span></p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">&#10024;</div>
+        <h3 data-en="Smart spacing &amp; contractions" data-zh="智能空格与缩写">Smart spacing &amp; contractions</h3>
+        <p><span class="en">Punctuation typed right after a selected word tucks in before the auto-space: "hello ." becomes "hello. " automatically. Type contractions naturally &mdash; mid-word apostrophe no longer breaks the composing state, so <strong>can't</strong>, <strong>I'm</strong>, <strong>won't</strong> all compose in one go. Ambiguous forms like "cant" always show "can't" right after the literal.</span><span class="zh">选词后紧跟的标点自动归位：输入 "hello ." 自动变成 "hello. "。缩写直打——词中撇号不再打断输入状态，<strong>can't</strong>、<strong>I'm</strong>、<strong>won't</strong> 一气呵成。输入 "cant" 时，"can't" 始终紧随原词显示。</span></p>
       </div>
     </div>
   </div>
