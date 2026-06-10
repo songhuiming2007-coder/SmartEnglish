@@ -294,7 +294,7 @@ body.lang-zh .en { display: none; }
   <div class="container">
     <div class="hero-badge">
       <span class="dot"></span>
-      <span data-en="v0.4.2 — SQLite, bigram learning, custom snippets, DND for 30+ apps" data-zh="v0.4.2 — SQLite 存储、bigram 学习、自定义片语、30+ 应用不打扰">v0.4.2 — SQLite, bigram learning, custom snippets, DND for 30+ apps</span>
+      <span data-en="v0.4.3 — SQLite, bigram learning, custom snippets, DND for 30+ apps" data-zh="v0.4.3 — SQLite 存储、bigram 学习、自定义片语、30+ 应用不打扰">v0.4.3 — SQLite, bigram learning, custom snippets, DND for 30+ apps</span>
     </div>
     <h1>
       <span class="dim"><span class="en">iPhone-style</span><span class="zh">iPhone 式</span></span><br>
@@ -487,6 +487,21 @@ body.lang-zh .en { display: none; }
     <div class="features-grid">
       <div class="feature-card">
         <div class="feature-icon">&#128296;</div>
+        <h3>v0.4.3</h3>
+        <p><span class="en"><strong>Bug fix release</strong><br><br>
+        <strong>Candidate window above save dialogs</strong> — raised window level so system save panels no longer cover it.<br><br>
+        <strong>Space commits the highlighted candidate</strong> — arrow keys / mouse hover move the highlight, Space now respects it (Tab still picks the first).<br><br>
+        <strong>"can't" now appears when typing "cant"</strong> — ambiguous contractions (can't, we'll, we're, I'd, won't) always show right after the literal word.<br><br>
+        <strong>Caps Lock-aware casing</strong> — single letter "H" commits "Have" when Shift-typed, "HAVE" when Caps Lock is on.<br><br>
+        <strong>Better proper noun candidates</strong> — mixed-case nouns (Mac, iPhone) replace the lowercase candidate; prefix completion finds nouns missing from the dictionary.</span><span class="zh"><strong>Bug 修复版本</strong><br><br>
+        <strong>候选窗不再被保存对话框遮挡</strong> — 提升窗口层级，系统保存面板不再盖住候选窗。<br><br>
+        <strong>空格上屏高亮候选词</strong> — 方向键/鼠标悬停移动高亮后，空格选中的是高亮词（Tab 仍固定选第一个）。<br><br>
+        <strong>输入 "cant" 时显示 "can't"</strong> — 歧义缩写（can't、we'll、we're、I'd、won't）固定显示在原词之后。<br><br>
+        <strong>Caps Lock 感知大写</strong> — 单个字母 "H"：Shift 打出上屏 "Have"，Caps Lock 亮灯上屏 "HAVE"。<br><br>
+        <strong>更好的专有名词候选</strong> — 混合大小写名词（Mac、iPhone）直接替换小写候选；词典里没有的专有名词也能前缀补全。</span></p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">&#128296;</div>
         <h3>v0.4.2</h3>
         <p><span class="en"><strong>Bug fixes &amp; UI overhaul</strong><br><br>
         Fixed ambiguous contraction overflow: <code style="font-family:var(--mono);font-size:13px;background:var(--bg);padding:1px 6px;border-radius:4px;">removeFirst()</code> was incorrectly evicting the top candidate when the list was full.<br><br>
@@ -653,7 +668,7 @@ body.lang-zh .en { display: none; }
         <span>&bull;</span>
         <span>~1 MB</span>
         <span>&bull;</span>
-        <span>v0.4.2</span>
+        <span>v0.4.3</span>
       </div>
       <div class="download-buttons">
         <a href="https://github.com/songhuiming2007-coder/SmartEnglish/releases/latest/download/SmartEnglish.pkg" class="btn btn-primary">

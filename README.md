@@ -135,6 +135,14 @@ Snippets appear at the top of the candidate list with highest priority.
 
 ## Version History
 
+### v0.4.3
+- **Candidate window above save dialogs** — raised window level so system save panels no longer cover it
+- **Space commits the highlighted candidate** — arrow keys / mouse hover move the highlight, Space now respects it (Tab still picks the first)
+- **can't now appears when typing cant** — ambiguous contractions (can't, we'll, we're, I'd, won't) always show right after the literal word
+- **Caps Lock-aware casing** — single letter "H" commits "Have" when Shift-typed, "HAVE" when Caps Lock is on
+- **Better proper noun candidates** — mixed-case nouns (Mac, iPhone) replace the lowercase candidate; prefix completion finds nouns missing from the dictionary
+- **Privacy & Security docs** — README now documents the offline, local-only design
+
 ### v0.4.2
 - **Unified geometric model** — all candidate window dimensions derived from single `pillHeight` variable (design token pattern)
 - **Mouse click selection** — click a candidate pill to select it
